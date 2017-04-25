@@ -7,7 +7,7 @@ typedef enum TYPE { COPY, REMOVE, DEFAULT } funcType;
 
 // mybackup.log 파일
 FILE* LOG;
-int srcLen,dstLen;
+int srcLen, dstLen;
 BOOL _Body(const wchar_t *sDir, const wchar_t *dDir, funcType t);
 
 void CharToWChar(const char* src, wchar_t* dst)
@@ -27,53 +27,53 @@ void _PrintLog(const wchar_t* log)
 	fprintf(LOG, "\n");
 }
 
-void _FileCopy(const WIN32_FIND_DATA* file,const wchar_t* sPath,const wchar_t* dPath)
+void _FileCopy(const WIN32_FIND_DATA* file, const wchar_t* sPath, const wchar_t* dPath)
 {
 	CopyFile(sPath, dPath, FALSE);
-	
-	wchar_t wLog[1028];	
-	wsprintf(wLog, L"src%s is copied.\t", sPath+srcLen);		
+
+	wchar_t wLog[1028];
+	wsprintf(wLog, L"src%s is copied.\t", sPath + srcLen);
 	_PrintLog(wLog);
 }
 
-void _CreateDirectory(const wchar_t* dPath,const WIN32_FIND_DATA* file)
+void _CreateDirectory(const wchar_t* dPath, const WIN32_FIND_DATA* file)
 {
 	CreateDirectory(dPath, NULL);
 	wchar_t wLog[1028];
-	wsprintf(wLog, L"DIR src%s is created.\t", dPath+srcLen);
-	_PrintLog(wLog);	
+	wsprintf(wLog, L"DIR src%s is created.\t", dPath + srcLen);
+	_PrintLog(wLog);
 }
 
 void _RemoveFile(WIN32_FIND_DATA* file, wchar_t* src)
 {
-	if(file->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+	if (file->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 		RemoveDirectory(src);
 	}
 	else {
 		_wremove(src);
 	}
 	wchar_t wLog[1028];
-	wsprintf(wLog, L"dst%s is removed.\t", src+dstLen);	
+	wsprintf(wLog, L"dst%s is removed.\t", src + dstLen);
 	_PrintLog(wLog);
 }
 
-BOOL _FindFile(WIN32_FIND_DATA* src, const WIN32_FIND_DATA* dst, const wchar_t* path) 
-{		
+BOOL _FindFile(WIN32_FIND_DATA* src, const WIN32_FIND_DATA* dst, const wchar_t* path)
+{
 	HANDLE hFile = FindFirstFile(path, src);
-	while (lstrcmpW(src->cFileName, dst->cFileName) != 0 && FindNextFile(hFile, src)==TRUE);
-	
+	while (lstrcmpW(src->cFileName, dst->cFileName) != 0 && FindNextFile(hFile, src) == TRUE);
+
 	if (hFile != NULL) {
 		FindClose(hFile);
 	}
-	
-	return lstrcmpW(src->cFileName,dst->cFileName)==0;
+
+	return lstrcmpW(src->cFileName, dst->cFileName) == 0;
 }
 
 void _Copy_Body(WIN32_FIND_DATA* dFile, WIN32_FIND_DATA* sFile, wchar_t* dst, wchar_t* src)
 {
 	// 디렉토리 인경우 디렉토리를 생성하고 이동하여 생성
-	if (sFile->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {			
-		_CreateDirectory(dst, NULL);			
+	if (sFile->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+		_CreateDirectory(dst, NULL);
 		_Body(src, dst, COPY);
 	}
 	//파일인 경우 복사
@@ -93,12 +93,12 @@ void _Remove_Body(WIN32_FIND_DATA* dFile, WIN32_FIND_DATA* sFile, wchar_t* dst, 
 		else {
 			_Body(src, dst, REMOVE);
 			_RemoveFile(sFile, src);
-		}		
+		}
 	}
 	//파일인 경우
-	else {		
+	else {
 		// 파일이 존재하지 않는 경우 삭제
-		if (!_FindFile(dFile, sFile, dst)&&lstrcmp(sFile->cFileName,L"mybackup.log")!=0) {
+		if (!_FindFile(dFile, sFile, dst) && lstrcmp(sFile->cFileName, L"mybackup.log") != 0) {
 			_RemoveFile(sFile, src);
 		}
 	}
@@ -113,17 +113,25 @@ void _Default_Body(WIN32_FIND_DATA* dFile, WIN32_FIND_DATA* sFile, wchar_t* dst,
 			_CreateDirectory(dst, sFile);
 			_Body(src, dst, COPY);
 		}
-		else {	
+		else {
 			_Body(src, dst, DEFAULT);
 		}
 	}
+	
+	
 	//파일인 경우
 	else {
 		BOOL isUpdated = FALSE;
 		// 파일이 dst에 있는지 체크
 		// 복사할 파일이 존재하면 업데이트가 최신인지 확인
-		if (_FindFile(dFile, sFile, dst)) {
-			isUpdated = dFile->ftLastWriteTime.dwHighDateTime == sFile->ftLastWriteTime.dwHighDateTime;
+		if (_FindFile(dFile, sFile, dst)) {			
+			unsigned long long sTime=0, dTime=0;
+			sTime |= sFile->ftLastWriteTime.dwHighDateTime << 32;
+			sTime |= sFile->ftLastWriteTime.dwLowDateTime;
+			dTime |= dFile->ftLastWriteTime.dwHighDateTime << 32;
+			dTime |= dFile->ftLastWriteTime.dwLowDateTime;
+
+			isUpdated = dTime >= sTime;
 		}
 		// 업데이트 되지 않은 파일인 경우 업데이트한다.
 		if (!isUpdated) {
@@ -132,7 +140,7 @@ void _Default_Body(WIN32_FIND_DATA* dFile, WIN32_FIND_DATA* sFile, wchar_t* dst,
 	}
 }
 
-BOOL _Body(const wchar_t *sDir, const wchar_t *dDir,funcType t)
+BOOL _Body(const wchar_t *sDir, const wchar_t *dDir, funcType t)
 {
 	WIN32_FIND_DATA fdFile;
 	WIN32_FIND_DATA dFile;
@@ -145,15 +153,16 @@ BOOL _Body(const wchar_t *sDir, const wchar_t *dDir,funcType t)
 	//Specify a file mask. *.* = We want everything! 
 	wsprintf(sPath, L"%s\\*.*", sDir);
 	wsprintf(dPath, L"%s\\*.*", dDir);
-
+	sprintf(stdout, "ASD");
+	sscanf(stdout, "ASD");
 	// src와 dst path 체크
 	if ((hSrc = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE) {
-		fwprintf(LOG,L"SRC Path not found: [%s]\n", sDir);
+		fwprintf(LOG, L"SRC Path not found: [%s]\n", sDir);
 		return FALSE;
 	}
 	// dst의 경우 원본 파일외의 파일을 삭제할때 src에는 없는 path이므로 확인 하지 않는다.
-	if (t!=REMOVE && (hDstFirst = FindFirstFile(dPath, &fdFile)) == INVALID_HANDLE_VALUE) {
-		fwprintf(LOG,L"DST Path not found: [%s]\n", dDir);
+	if (t != REMOVE && (hDstFirst = FindFirstFile(dPath, &fdFile)) == INVALID_HANDLE_VALUE) {
+		fwprintf(LOG, L"DST Path not found: [%s]\n", dDir);
 		return FALSE;
 	}
 
@@ -185,9 +194,9 @@ BOOL _Body(const wchar_t *sDir, const wchar_t *dDir,funcType t)
 }
 
 
-BOOL _RemoveNeedless(const wchar_t* sDir,const wchar_t* dDir)
+BOOL _RemoveNeedless(const wchar_t* dst, const wchar_t* compare)
 {
-	return _Body(sDir, dDir, REMOVE);
+	return _Body(dst, compare, REMOVE);
 }
 
 // 파일 경로 설정 입력받은 char -> wchar_t로 변환
@@ -204,8 +213,7 @@ void InitData(const char* src, const char* dst, wchar_t* wSrc, wchar_t* wDst)
 }
 
 BOOL MyBackUp(const wchar_t* sDir, const wchar_t* dDir)
-{
-	_RemoveNeedless(dDir, sDir);
+{	
 	return _Body(sDir, dDir, DEFAULT);
 }
 
@@ -215,12 +223,13 @@ void ReleaseData()
 	fclose(LOG);
 }
 
-int main(int argc,char* argv[]) {
+int main(int argc, char* argv[])
+{
 	wchar_t sDir[2048];
 	wchar_t dDir[2048];
-	
+
 	InitData(argv[1], argv[2], sDir, dDir);
-	
+
 	MyBackUp(sDir, dDir);
 
 	ReleaseData();
