@@ -1,4 +1,4 @@
-#[Assignment # 2]
+# [Assignment # 2]
 Given two tables as follows;
  
 Students(char name[20], unsigned studentID, float score, unsigned advisorID)
@@ -6,7 +6,8 @@ Students(char name[20], unsigned studentID, float score, unsigned advisorID)
 Note that studentID is a key of the table. We assume that the block size is 4096 bytes.
  
 We insert records of Students into files Students.DB. Each record is inserted in a block without overlapping into two blocks.
- 
+
+## Sequences
 1] Implement dynamic hashing on Students with studentID where the hash table is stored in Students.hash. Note that this hash table should be stored in binary. You may use any kind of hashing function for this dynamic hashing.
  
 2] Implement B+-tree on Students with score, where this index is stored in Students_score.idx. Note that this index should be stored in binary and the block number is determined by the dynamic hashing. 
