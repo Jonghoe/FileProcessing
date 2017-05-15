@@ -19,3 +19,8 @@ N // number of student records
 Julius Cesare, 201512345, 3.6, 123945
 …
 Immanuel Kant, 190234952, 2.4, 123921
+
+## UML Diagram
+1] Dynamic Hashing
+
+![Alt text](./Index_Hashing/UML.jpg)
