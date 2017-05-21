@@ -30,6 +30,28 @@ int HashTable::findHash(unsigned key)
 	return key & MASK;
 }
 
+void HashTable::printTable()
+{
+	for (int i = 0; i < buckets.size(); ++i) {
+		cout << "Idx[" << i << "] ="<<buckets[i]->getBlkNum()<<endl;		
+	}	
+}
+
+void HashTable::printBuckets()
+{
+	vector<bool> visited(buckets.size(), false);
+	for (int i = 0; i < buckets.size(); ++i) {
+		int blkNum = buckets[i]->getBlkNum();
+		if(!visited[blkNum]){
+			visited[blkNum] = true;
+			cout << "=================== BLKNUM: " << blkNum << "===========================" << endl;
+			for (int j = 0; j < buckets[i]->getCapacity(); ++j) {
+				cout << "stu: " << (*buckets[i])[j].name << " " << (*buckets[i])[j].studentID << endl;
+			}
+		}
+	}
+}
+
 void HashTable::modifyBuckets()
 {
 	buckets.resize(buckets.size() * 2);
@@ -40,17 +62,7 @@ void HashTable::modifyBuckets()
 
 void HashTable::modifyMask()
 {
-	MASK = (1<<maxLevel) -1 ;
-}
-
-void HashTable::printTable()
-{
-	for (int i = 0; i < buckets.size(); ++i) {
-		cout << "=========== BlockNum: " << buckets[i]->getBlkNum() << "//Level: "<< buckets[i]->getLevel()<<" ================" << endl;
-		for (int j = 0; j < buckets[i]->getCapacity(); ++j)
-			cout << "ID " << (*buckets[i])[j].name << "\t" << (*buckets[i])[j].studentID << endl;
-		cout << "==============================================================" << endl;
-	}
+	MASK = (1 << maxLevel) - 1;
 }
 
 void HashTable::move(int src, int dst)
@@ -70,3 +82,4 @@ void HashTable::move(int src, int dst)
 		}
 	}
 }
+

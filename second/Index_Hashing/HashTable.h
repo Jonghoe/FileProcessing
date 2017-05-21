@@ -12,9 +12,12 @@ protected:
 public:
 	HashTable();
 	void insert(Student& record);
-	void printTable();
 	int findHash(unsigned key);
+	void printTable();
+	void printBuckets();
+	~HashTable() {
 
+	}
 private:
 	void modifyBuckets();
 	void modifyMask();
