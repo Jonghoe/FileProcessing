@@ -3,8 +3,8 @@
 This is for File Structure class Assignments. 
 Every directory represent an assignment
 
-First assignment is in directory, Jonghoe.
-Second assignment is in directory, second.
+First assignment is in directory, 01_USB_Backup.
+Second assignment is in directory, 02_Indexing_and_Hashing.
 
 ## Code Example
 
