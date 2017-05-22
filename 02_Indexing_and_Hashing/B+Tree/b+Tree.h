@@ -1,22 +1,58 @@
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
 
+class BPlusTree;
+class Node;
+class InternalNode;
+class TerminalNode;
+
 class BPlusTree{
- protected:
-  InternalNode* rootNode;
- public:
+protected:
+  Node* rootNode;
+public:
   BPlusTree();
-  bool insert(unsigned int studentID, unsigned int blockNum);
-};
 
-class InternalNode {
- private:
-  const int size;
+  bool  storeTree();
+  bool  readTree();
   
- public:
+  bool  insert(float score, int blockNum);
+  int   exactMatchSearch(float score);
+  int*  rangeSearch(float score);
 };
 
-class TerminalNode {
+class Node{};
+
+class InternalNode: public Node {
+  friend class BPlusTree;
+  
+private:
+  const int size;
+  int storedRecordNumber;
+
+  Node* branchs[512];
+  float scoreDeli[511];
+protected:
+  InternalNode();
+  
+  int search(float score);
+};
+
+
+class TerminalNode: public Node {
+  friend class BPlusTree;
+  friend class InternalNode;
+  
+private:
+  const int size;
+  int storedRecordNumber;
+
+  float scores[511];
+  int   blockNum[511];
+  TerminalNode* nextTerminalNode;
+protected:
+  TerminalNode();
+  int getBlockNumber(float score);
+
 };
 
 #endif
