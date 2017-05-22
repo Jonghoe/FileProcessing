@@ -13,7 +13,7 @@ int  BPlusTree::exactMatchSearch(float score) {
 int* BPlusTree::rangeSearch(float score) {
 }
 
-InternalNode::InternalNode():branchSize(512), scoreSize(511) {}
+InternalNode::InternalNode() : branchSize(512), scoreSize(511) {}
 Node* InternalNode::search(float score) {
 }
 

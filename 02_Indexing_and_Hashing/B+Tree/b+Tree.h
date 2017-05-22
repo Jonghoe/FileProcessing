@@ -1,7 +1,6 @@
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
 
-
 class BPlusTree;
 class Node {};
 class InternalNode;
