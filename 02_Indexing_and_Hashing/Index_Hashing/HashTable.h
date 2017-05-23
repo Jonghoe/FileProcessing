@@ -7,6 +7,8 @@ class HashTable {
 protected:
 	int MASK;
 	int maxLevel;
+
+	vector<int> table;
 	vector<Bucket*> buckets;
 
 public:
@@ -15,11 +17,11 @@ public:
 	int findHash(unsigned key);
 	void printTable();
 	void printBuckets();
-	~HashTable() {
-
-	}
+	bool check(unsigned key);
+	~HashTable();
 private:
-	void modifyBuckets();
+	void backTable(int hash, int blkNum, int level);
+	void modifyTable();
 	void modifyMask();
 	void move(int src, int dst);
 };

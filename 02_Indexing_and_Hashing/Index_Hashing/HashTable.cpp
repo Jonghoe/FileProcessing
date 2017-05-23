@@ -1,28 +1,35 @@
 #include "HashTable.h"
 #include<iostream>
-HashTable::HashTable() :buckets(2), MASK(1), maxLevel(1)
+HashTable::HashTable() :table(2), MASK(1), maxLevel(1),buckets(2)
 {
 	buckets[0] = new Bucket();
 	buckets[1] = new Bucket();
+	table[0] = 0;
+	table[1] = 1;
 }
 
 void HashTable::insert(Student & record)
 {
 	int hash = findHash(record.studentID);
+	int blkNum = table[hash];
 	int err;
-	err = buckets[hash]->insert(record);
+	err = buckets[blkNum]->insert(record);
 	if (err == -1 ) {
-		// 해당 hash값의 다음 block의 절반을 저장할 block number ex) 00 -> 10
-		int half = ((1 << buckets[hash]->getLevel() - 1) - 1)&hash |( 1 << buckets[hash]->getLevel() - 1);
-		if (maxLevel < buckets[hash]->getLevel()) {		
-			modifyBuckets();
-			maxLevel = buckets[hash]->getLevel();
+		// 해당 blkNum값의 다음 block의 절반을 저장할 block number ex) 00 -> 10
+		int mod = ((1 << buckets[blkNum]->getLevel() - 1) - 1)&hash;
+		int half = mod | (1 << buckets[blkNum]->getLevel() - 1);
+		bool needChange = maxLevel < buckets[blkNum]->getLevel();
+		if (needChange) {
+			modifyTable();
+			maxLevel = buckets[blkNum]->getLevel();
 			modifyMask();
 		}
-		buckets[half] = new Bucket(buckets[hash]->getLevel());
-		move(hash, half);
+		buckets.push_back(new Bucket(buckets[blkNum]->getLevel()));								
+		table[half] = buckets.size() - 1;
+		backTable(half, buckets.size() - 1, buckets.back()->getLevel());
+		move(mod, half);
 		insert(record);
-	}
+	}	
 }
 
 int HashTable::findHash(unsigned key)
@@ -32,48 +39,69 @@ int HashTable::findHash(unsigned key)
 
 void HashTable::printTable()
 {
-	for (int i = 0; i < buckets.size(); ++i) {
-		cout << "Idx[" << i << "] ="<<buckets[i]->getBlkNum()<<endl;		
+	for (int i = 0; i < table.size(); ++i) {
+		cout << "Idx[" << i << "] ="<<table[i]<<endl;		
 	}	
 }
 
 void HashTable::printBuckets()
 {
-	vector<bool> visited(buckets.size(), false);
 	for (int i = 0; i < buckets.size(); ++i) {
-		int blkNum = buckets[i]->getBlkNum();
-		if(!visited[blkNum]){
-			visited[blkNum] = true;
-			cout << "=================== BLKNUM: " << blkNum << "===========================" << endl;
-			for (int j = 0; j < buckets[i]->getCapacity(); ++j) {
-				cout << "stu: " << (*buckets[i])[j].name << " " << (*buckets[i])[j].studentID << endl;
-			}
+		cout << "==================buckets[" << i << ", " << buckets[i]->getLevel()<< " ]=================" << endl;
+		for (int j = 0; j < buckets[i]->getCapacity(); ++j) {
+			cout << "stu: " << (*buckets[i])[j].name << " ID: " << (*buckets[i])[j].studentID << endl;
 		}
 	}
 }
 
-void HashTable::modifyBuckets()
+bool HashTable::check(unsigned key)
 {
-	buckets.resize(buckets.size() * 2);
-	for (int i = buckets.size() / 2; i < buckets.size(); ++i) {
-		buckets[i] = buckets[i & MASK];
+	int hash = findHash(key);
+	int blkNum = table[hash];
+	for (int i = 0; i < buckets[blkNum]->getCapacity(); ++i) {
+		if((*buckets[blkNum])[i].studentID==key)
+			return true;
 	}
+	return false;
 }
 
+HashTable::~HashTable()
+{
+	
+	for (int i = 0; i < buckets.size(); ++i) {
+		delete buckets[i];
+	}
+}
+void HashTable::modifyTable()
+{
+	table.resize(table.size() * 2);
+	for (int i = table.size() / 2; i < table.size(); ++i) {
+		table[i] = table[i & MASK];
+	}	
+}
+void HashTable::backTable(int hash,int blkNum,int level)
+{
+	if (maxLevel <= level)
+		return;	
+	table[(1 << (level)) + hash] = blkNum;
+	backTable(hash, blkNum, level + 1);
+	backTable((1 << (level)) + hash, blkNum, level + 1);
+}
 void HashTable::modifyMask()
 {
 	MASK = (1 << maxLevel) - 1;
 }
 
-void HashTable::move(int src, int dst)
+void HashTable::move(int first, int second)
 {
+	int src = table[first];
+	int dst = table[second];
 	Bucket& a = *buckets[src];
 	Bucket& b = *buckets[dst];
 	int i = 0;
 	while( i < buckets[src]->getCapacity()) {
-		int localKey = a[i].studentID&((1 << a.getLevel()) - 1);
-		int  as = a[i].studentID;
-		if (localKey == dst) {
+		int localKey = a[i].studentID&( (1 << a.getLevel()) - 1);
+		if (localKey == second) {
 			b.insert(a[i]);
 			a.erase(i);
 		}
