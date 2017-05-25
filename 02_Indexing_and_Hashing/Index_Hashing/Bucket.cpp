@@ -1,29 +1,29 @@
 #include"Bucket.h"
 #include<cassert>
 int Bucket::nextBlkNum = 0;
-Bucket::Bucket() :capacity(0), size(4), blkNum(nextBlkNum++), level(1)
+Bucket::Bucket() :size(0), capacity(BLOCK_SIZE/sizeof(Student)), blkNum(nextBlkNum++), level(1)
 {
-	records = new Student[size];
+	records = new Student[capacity];
 }
 
-Bucket::Bucket(int l) : capacity(0), size(4), blkNum(nextBlkNum++), level(l)
+Bucket::Bucket(int l) : size(0), capacity(BLOCK_SIZE / sizeof(Student)), blkNum(nextBlkNum++), level(l)
 {
-	records = new Student[size];
+	records = new Student[capacity];
 }
 
 Student Bucket::erase(int position)
 {
-	assert(position < capacity);
+	assert(position < size);
 	Student temp = records[position];
-	records[position] = records[capacity - 1];
-	records[capacity - 1] = temp;
-	--capacity;
+	records[position] = records[size - 1];
+	records[size - 1] = temp;
+	--size;
 	return temp;
 }	
 
-int Bucket::getCapacity()const
+int Bucket::getSize()const
 {
-	return capacity;
+	return size;
 }
 
 Student& Bucket::operator[](int idx)const
@@ -37,7 +37,7 @@ int Bucket::insert(Student & data)
 		++level;
 		return -1;		
 	}
-	records[capacity++] = data;
+	records[size++] = data;
 	return 0;
 }
 

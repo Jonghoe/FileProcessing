@@ -4,9 +4,9 @@
 class Bucket {
 protected:
 	static int nextBlkNum;
-	const int size;
+	const int capacity;
 	int level;
-	int capacity;
+	int size;
 	Student* records;
 	int blkNum;
 public:
@@ -20,6 +20,6 @@ public:
 	int getLevel()const;
 	// data를 array 마지막에 삽입 size를 넘어가면 -1 반환
 	int insert(Student& data);
-	int getCapacity()const;
+	int getSize()const;
 	Student& operator[](int idx)const;
 };
