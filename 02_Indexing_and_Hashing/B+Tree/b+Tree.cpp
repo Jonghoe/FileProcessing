@@ -68,7 +68,25 @@ int  TerminalNode::cntTillUpper(float scoreUpperBound) {
   }
 }
 
-bool TerminalNode::cpyMatchRcords(int* blockNums, int startIndex) {
+bool TerminalNode::cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft) {
+  int i = 0;
+  while(cpyLeft > 0) {
+    // done copying all of datas in this block
+    if (i >= storedRecordNumber)
+      break;
+
+    blockNums[startIndex] = blockNum[i++];
+    
+    startIndex++;
+    cpyLeft--;
+  }
+  
+  if (cpyLeft > 0) // more left to copy to next node
+    return nextTerminalNode->cpyMatchRecords(blockNums, startIndex, cpyLeft);
+  else if (cpyLeft == 0) // finish copying for the search
+    return true;
+  else
+    return false;
 }
 
 int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
@@ -81,7 +99,6 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   }
   
   // 1. find where lower bound starts
-  int matchSize = 0;
   int startIndex = 0;
   for (int i = 0; i < storedRecordNumber; i++) {
     if (!(scoreLowerBound <= scores[i])) {
@@ -91,11 +108,23 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   }
 
   // 2. find & count where upper bound ends
-  if ()
+  int matchSize = cntTillUpper(scoreUpperBound) - (startIndex + 1);
 
   // 3. copy matching records' block numbers
   int* blockNums = new int[matchSize];
+  int  endIndex = startIndex + matchSize; // the last index to copy in this block
+  if (endIndex < storedRecordNumber)
+    endIndex = storedRecordNumber;
+
+  int cpyedNum = 0;
+  for(int i = startIndex; i < endIndex; i++)
+    blockNums[cpyedNum++] = blockNum[i]; // copy matching records in this block
+  cpyMatchRecords( blockNums, cpyedNum, matchSize - cpyedNum); // copy in others
+
+  // 4. return
+  return blockNums;
 }
+
 bool TerminalNode::insert(float score, int blockNum) {
 }  
 
