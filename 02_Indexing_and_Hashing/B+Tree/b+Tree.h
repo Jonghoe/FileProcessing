@@ -36,15 +36,17 @@ class InternalNode: public Node {
 private:
   const int branchSize; //512
   const int scoreSize;  //511
-  int storedRecordNumber;
 
+  // contents of the block
+  int storedRecordNumber;
   Node* branchs[512];
   float scoreDeli[511];
-  InternalNode* parent;
-  
+
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
+  int   minVal() {return scoreDeli[0];}
+  int   maxVal() {return scoreDeli[storedRecordNumber-2];}
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);

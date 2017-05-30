@@ -6,26 +6,31 @@ bool BPlusTree::storeTree() {} // tngud's part (store the structure in a file)
 bool BPlusTree::readTree() {}  // tngus's part (read the structure from a file)
   
 bool BPlusTree::insert(float score, int blckN) {
-  /*
-  int* lookingAt = rootNode;
+  Node* insertVal = rootNode.insert(score, blckN);
 
-  while(1) {
-    if (lookingAt->ifTerminal()) { // found terminal
-      //if (score ) // where?
-      //if (!lookingAt.insert(score, blockNum)) { // should do sth if no more space	
-      //}
-    }
-    else { // try finding terminal
-      lookingAt = lookingAt->search(score, score); // this is the first node match
-    }
-    }*/
+  // if no overflow
+  if (insertVal == NULL)
+    return true;
+  // if overflow
+  else {
+    InternalNode* newRootNode = new InterNode();
+
+    newRootNode->storedRecordNumber = 2;
+    newRootNode->branchs[0] = rootNode;
+    newRootNode->branchs[1] = insertVal;
+    newRootNode->scoreDeli[0] = branchs[1]->minVal();
+
+    rootNode = newRootNode;
+    
+    return true;
+  }
 }
 
 Node* BPlusTree::searchFirstMatch(float scoreLowerBound) {
   return rootNode->searchFirstMatch(scoreLowerBound);
 }
 
-InternalNode::InternalNode() : branchSize(512), scoreSize(511) {}
+InternalNode::InternalNode() : branchSize(512), scoreSize(511), storedRecordNumber(0) {}
 
 // search for first corresponding score low bound
 Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
@@ -47,9 +52,40 @@ Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
 }
 
 Node* InternalNode::insert(float score, int blckN) {
+  // 1. find where to insert
+  int insertIndex = 0;
+  //   (1) checking the last index
+  if (maxVal() <= score)
+    insertIndex = storedRecordNumber - 1;
+  //   (2) checking other indice
+  else if (!(score < minVal())) {
+    for(int i = storedRecordNumber - 2; i > 0; i--)
+      if (scores[i] <= score) {
+	insertIndex = i;
+	break;
+      }
+  }
+  //   (3) checking the first index
+  else
+    insertIndex = 0;
+
+  // 2. insert
+  Node* newVal = branchs[insertIndex]->insert(score, blckN);
+  
+  // 3. update Deli vals for inserted ones
+  scoreDeli[insertIndex-1] = branchs[insertIndex]->minVal();
+
+  
+  if (newVal == NULL)
+    return NULL;
+  // 4. if overflow split
+  else if (size < storedRecordNumber + 1) {
+    InternalNode* newNode = new InternalNode();
+    // not done yet
+  }
 }  
 
-TerminalNode::TerminalNode() : size(511) {}
+TerminalNode::TerminalNode() : size(511), storedRecordNumber(0) {}
 Node* TerminalNode::searchFirstMatch(float scoreLowerBound) {
   return this;
 }
@@ -152,7 +188,7 @@ Node* TerminalNode::insert(float score, int blckN) {
   
   // 2. if overflow, split
   bool ifOverflow = false;
-  if (size <= storedRecordNumber + 1) {
+  if (size < storedRecordNumber + 1) {
     ifOverflow = true;
     TerminalNode* newNode = new TerminalNode();
 
@@ -191,7 +227,7 @@ Node* TerminalNode::insert(float score, int blckN) {
     return nextTerminalNode;
   else
     return NULL;
-}  
+}
 
 
 int main() {
