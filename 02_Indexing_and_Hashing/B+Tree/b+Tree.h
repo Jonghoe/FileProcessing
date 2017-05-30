@@ -16,7 +16,7 @@ public:
   bool storeTree();
   bool readTree();
   
-  bool insert(float score, int blockNum);
+  bool insert(float score);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
 };
@@ -25,6 +25,7 @@ class Node {
  public:
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
+  virtual Node* insert(float score) = 0;
 };
 
 
@@ -42,8 +43,10 @@ private:
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
+  
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
+  Node* insert(float score);
 };
 
 
@@ -62,7 +65,7 @@ private:
 
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
-  bool cpyMatchRcords(int* blockNums, int startIndex);
+  bool cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft);
 protected:
   TerminalNode();
   bool  ifTerminal() {return true;}
@@ -71,7 +74,7 @@ protected:
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
-  bool  insert(float score, int blockNum);
+  Node* insert(float score);
 };
 
 #endif

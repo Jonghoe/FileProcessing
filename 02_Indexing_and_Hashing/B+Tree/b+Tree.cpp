@@ -5,7 +5,7 @@ BPlusTree::BPlusTree() : rootNode(new TerminalNode()) {}
 bool BPlusTree::storeTree() {} // tngud's part (store the structure in a file)
 bool BPlusTree::readTree() {}  // tngus's part (read the structure from a file)
   
-bool BPlusTree::insert(float score, int blockNum) {
+bool BPlusTree::insert(float score) {
   /*
   int* lookingAt = rootNode;
 
@@ -20,6 +20,7 @@ bool BPlusTree::insert(float score, int blockNum) {
     }
     }*/
 }
+
 Node* BPlusTree::searchFirstMatch(float scoreLowerBound) {
   return rootNode->searchFirstMatch(scoreLowerBound);
 }
@@ -41,17 +42,21 @@ Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
     }
     // 3. checking the last index
     if (scoreDeli[checkSize-1] <= scoreLowerBound)
-      return branchs[checkSize]->searchFirstMatch(scoreLowerBound); // branch[511]
+      return branchs[checkSize]->searchFirstMatch(scoreLowerBound);
   }
 }
+
+Node* InternalNode::insert(float score) {
+}  
 
 TerminalNode::TerminalNode() : size(511) {}
 Node* TerminalNode::searchFirstMatch(float scoreLowerBound) {
   return this;
 }
 
+// function to help Terminal::search()
 // count how may records correspond to search
-int  TerminalNode::cntTillUpper(float scoreUpperBound) {
+int TerminalNode::cntTillUpper(float scoreUpperBound) {
   // if upperbound is bigger than max
   if (maxVal() < scoreUpperBound) {
     int nextNums = 0;
@@ -68,6 +73,8 @@ int  TerminalNode::cntTillUpper(float scoreUpperBound) {
   }
 }
 
+// function to help Terminal::search()
+// copy matching records' block nums
 bool TerminalNode::cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft) {
   int i = 0;
   while(cpyLeft > 0) {
@@ -125,7 +132,7 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   return blockNums;
 }
 
-bool TerminalNode::insert(float score, int blockNum) {
+Node* TerminalNode::insert(float score) {
 }  
 
 
