@@ -17,8 +17,8 @@ public:
   bool readTree();
   
   bool insert(float score, int blockNum);
-  int  exactMatchSearch(float score);
-  int* rangeSearch(float score);
+  // return corresponding record's block numbers
+  int* search(float scoreLowBound, float scoreUpperBound);
 };
 
 
@@ -36,8 +36,8 @@ private:
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
-  
-  Node* search(float score);
+  // search for forst corresponding score low bound
+  int* search(float scoreLowBound, float scoreUpperBound);
 };
 
 
@@ -47,19 +47,21 @@ class TerminalNode: public Node {
   
 private:
   const int size;
-  int storedRecordNumber;
 
+  // contents of the block
+  int storedRecordNumber;
+  TerminalNode* nextTerminalNode;
   float scores[511];
   int   blockNum[511]; // this should be changed into pointer
-  InternalNode* parent;
-  TerminalNode* nextTerminalNode;
-protected:
-  TerminalNode();
-  bool  ifTerminal() {return true;}
 
+protected:
+  TerminalNode();nb
+  bool  ifTerminal() {return true;}
+  int   minVal() {return scores[0];}
+  int   maxVal() {return socres[storedRecordNumber-1];}
+
+  int* search(float scoreLowBound, float scoreUpperBound);
   bool insert(float score, int blockNum);
-  int getBlockNumber(float score);
-  int getRangeBlockNumber(float score);
 };
 
 #endif

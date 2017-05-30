@@ -9,24 +9,22 @@ bool BPlusTree::insert(float score, int blockNum) {
 
   while(1) {
     if (lookingAt.ifTermianl()) { // found terminal
-      if (!lookingAt.insert(score, blockNum)) { // should do sth if no more space
-	
-      }
+      //if (score ) // where?
+      //if (!lookingAt.insert(score, blockNum)) { // should do sth if no more space	
+      //}
     }
     else { // try finding terminal
       lookingAt = lookingAt.search(score); // this is the first node match
     }
   }
 }
-int  BPlusTree::exactMatchSearch(float score) {
-}
-int* BPlusTree::rangeSearch(float score) {
-}
 
 InternalNode::InternalNode() : branchSize(512), scoreSize(511) {}
-Node* InternalNode::search(float score) {
-  if (score < scoreDeli[0])
-    return branchs[0];
+
+// search for forst corresponding score low bound
+int* InternalNode::search(float scoreLowerBound, float scoreUpperBound) {
+  if (scoreLowBound < scoreDeli[0])
+    return branchs[0].search(scoreLowerBound, scoreUpperBound);
   else {
     // this is for checking 1..(size-1)
     int checkSize = storedRecordNumber;
@@ -34,22 +32,19 @@ Node* InternalNode::search(float score) {
       checkSize--;
     
     for (int i = 0; i < checkSize; i++) {
-      if (scoreDeli[i] <= score && score < scoreDeli[i+1])
-	return branchs[i];
+      if (scoreDeli[i] <= scoreLowBound && scoreLowBound < scoreDeli[i+1])
+	return branchs[i].search(scoreLowerBound, scoreUpperBound);
     }
-    if (storedRecordNumber == scoreSize && score < scoreDeli[scoreSize-1])
-      return branchs[branchSize-1]
-      
+    if (storedRecordNumber == scoreSize && scoreLowBound < scoreDeli[scoreSize-1])
+      return branchs[branchSize-1].search(scoreLowerBound, scoreUpperBound)
   }
 }
 
 TerminalNode::TerminalNode() : size(511) {}
+int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
+}
 bool TerminalNode::insert(float score, int blockNum) {
 }  
-int TerminalNode::getBlockNumber(float score) {
-}
-int TerminalNode::getRangeBlockNumber(float score) {
-}
 
 
 int main() {
