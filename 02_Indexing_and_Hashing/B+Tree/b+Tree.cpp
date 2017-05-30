@@ -5,7 +5,7 @@ BPlusTree::BPlusTree() : rootNode(new TerminalNode()) {}
 bool BPlusTree::storeTree() {} // tngud's part (store the structure in a file)
 bool BPlusTree::readTree() {}  // tngus's part (read the structure from a file)
   
-bool BPlusTree::insert(float score) {
+bool BPlusTree::insert(float score, int blckN) {
   /*
   int* lookingAt = rootNode;
 
@@ -29,7 +29,7 @@ InternalNode::InternalNode() : branchSize(512), scoreSize(511) {}
 
 // search for first corresponding score low bound
 Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
-  // 1. checking the last index which is branch[0]
+  // 1. checking the first index which is branch[0]
   if (scoreLowerBound < scoreDeli[0])
     return branchs[0]->searchFirstMatch(scoreLowerBound);
   else {
@@ -46,7 +46,7 @@ Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
   }
 }
 
-Node* InternalNode::insert(float score) {
+Node* InternalNode::insert(float score, int blckN) {
 }  
 
 TerminalNode::TerminalNode() : size(511) {}
@@ -132,10 +132,70 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   return blockNums;
 }
 
-Node* TerminalNode::insert(float score) {
+Node* TerminalNode::insert(float score, int blckN) {
+  // 1.find where to insert
+  int insertIndex = 0;
+  //   (1) checking the last index
+  if (maxVal() <= score)
+    insertIndex = storedRecordNumber + 1;
+  //   (2) checking other indice
+  else if (!(score < minVal())) {
+    for (int i = storedRecordNumber - 1; 0 < i ; i--)
+      if ( scores[i-1] <= score && score < scores[i]) {
+	insertIndex = i;
+	break;
+      }
+  }
+  //   (3) checking the first index
+  else
+    insertIndex = 0;
+  
+  // 2. if overflow, split
+  bool ifOverflow = false;
+  if (size <= storedRecordNumber + 1) {
+    ifOverflow = true;
+    TerminalNode* newNode = new TerminalNode();
+
+    int newRecordNum = storedRecordNumber / 2; // number of record for this block
+    for (int i = 0; i < newRecordNum; i++) {
+      newNode->scores[i] = scores[i+newRecordNum];
+      newNode->blockNum[i] = blockNum[i+newRecordNum];
+    }
+    
+    // rearrange record numbers
+    newNode->storedRecordNumber = storedRecordNumber - newRecordNum;
+    storedRecordNumber = newRecordNum;
+
+    // switch links
+    newNode->nextTerminalNode = nextTerminalNode;
+    nextTerminalNode = newNode;
+  }
+
+  // 3. insert (if range is in this block)
+  if (insertIndex <= storedRecordNumber) {
+    for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
+      scores[i+1] = scores[i];
+      blockNum[i+1] = scores[i];
+    }
+    scores[insertIndex] = score;
+    blockNum[insertIndex] = blckN;
+    
+    storedRecordNumber++;
+  }
+  else {
+    nextTerminalNode->insert(score, blckN);
+  }
+
+  // 4. return
+  if (ifOverflow)
+    return nextTerminalNode;
+  else
+    return NULL;
 }  
 
 
 int main() {
+  BPlusTree* tree = new BPlusTree();
+  tree->insert(3.0, 1);
   return 0;
 }

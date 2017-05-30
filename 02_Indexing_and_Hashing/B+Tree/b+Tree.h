@@ -10,13 +10,14 @@ class TerminalNode;
 class BPlusTree{
 protected:
   Node* rootNode;
+  
 public:
   BPlusTree();
 
   bool storeTree();
   bool readTree();
   
-  bool insert(float score);
+  bool insert(float score, int blckN);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
 };
@@ -25,7 +26,7 @@ class Node {
  public:
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
-  virtual Node* insert(float score) = 0;
+  virtual Node* insert(float score, int blckN) = 0;
 };
 
 
@@ -40,13 +41,14 @@ private:
   Node* branchs[512];
   float scoreDeli[511];
   InternalNode* parent;
+  
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
-  Node* insert(float score);
+  Node* insert(float score, int blckN);
 };
 
 
@@ -66,6 +68,7 @@ private:
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
   bool cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft);
+  
 protected:
   TerminalNode();
   bool  ifTerminal() {return true;}
@@ -74,7 +77,7 @@ protected:
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
-  Node* insert(float score);
+  Node* insert(float score, int blckN);
 };
 
 #endif
