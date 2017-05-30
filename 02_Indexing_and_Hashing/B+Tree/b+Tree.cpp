@@ -1,4 +1,5 @@
 #include "b+Tree.h"
+#define NULL 0
 
 BPlusTree::BPlusTree() : rootNode(new TerminalNode()) {}
 bool BPlusTree::storeTree() {} // tngud's part (store the structure in a file)
@@ -55,7 +56,7 @@ int  TerminalNode::cntTillUpper(float scoreUpperBound) {
   if (maxVal() < scoreUpperBound) {
     int nextNums = 0;
     if (nextTerminalNode != NULL)
-      nexNums = nextTerminalNode->cntTillUpper(scoreUpperBound);
+      nextNums = nextTerminalNode->cntTillUpper(scoreUpperBound);
     else
       return storedRecordNumber + nextNums;
   }
@@ -72,11 +73,11 @@ bool TerminalNode::cpyMatchRcords(int* blockNums, int startIndex) {
 
 int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   // if first match node is not in this node but next one
-  if (maxVal() < scoreLoweBound) {
+  if (maxVal() < scoreLowerBound) {
     if (nextTerminalNode != NULL)
       return nextTerminalNode->search(scoreLowerBound, scoreUpperBound);
     else
-      return NULL
+      return NULL;
   }
   
   // 1. find where lower bound starts
@@ -90,10 +91,10 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
   }
 
   // 2. find & count where upper bound ends
-  
+  if ()
 
   // 3. copy matching records' block numbers
-  int* blockNums = new Int[matchSize];
+  int* blockNums = new int[matchSize];
 }
 bool TerminalNode::insert(float score, int blockNum) {
 }  

@@ -2,7 +2,7 @@
 #define BPLUSTREE_H
 
 class BPlusTree;
-class Node {};
+class Node;
 class InternalNode;
 class TerminalNode;
 
@@ -17,8 +17,14 @@ public:
   bool readTree();
   
   bool insert(float score, int blockNum);
-  // return corresponding record's block numbers
-  int* search(float scoreLowBound, float scoreUpperBound);
+  // return first match terminal node
+  Node* searchFirstMatch(float scoreLowerBound);
+};
+
+class Node {
+ public:
+  virtual bool  ifTerminal() = 0;
+  virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
 };
 
 
@@ -36,8 +42,8 @@ private:
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
-  // search for forst corresponding score low bound
-  int* search(float scoreLowBound, float scoreUpperBound);
+  // return first match terminal node
+  Node* searchFirstMatch(float scoreLowerBound);
 };
 
 
@@ -54,14 +60,18 @@ private:
   float scores[511];
   int   blockNum[511]; // this should be changed into pointer
 
+  // functions to help Terminal::search()
+  int  cntTillUpper(float scoreUpperBound);
+  bool cpyMatchRcords(int* blockNums, int startIndex);
 protected:
-  TerminalNode();nb
+  TerminalNode();
   bool  ifTerminal() {return true;}
   int   minVal() {return scores[0];}
-  int   maxVal() {return socres[storedRecordNumber-1];}
+  int   maxVal() {return scores[storedRecordNumber-1];}
 
-  int* search(float scoreLowBound, float scoreUpperBound);
-  bool insert(float score, int blockNum);
+  Node* searchFirstMatch(float scoreLowerBound);
+  int*  search(float scoreLowerBound, float scoreUpperBound);
+  bool  insert(float score, int blockNum);
 };
 
 #endif
