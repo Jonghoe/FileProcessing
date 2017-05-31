@@ -27,6 +27,8 @@ class Node {
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int blckN) = 0;
+  virtual int   minVal() = 0;
+  virtual int   maxVal() = 0;
 };
 
 
@@ -47,6 +49,10 @@ protected:
   bool  ifTerminal() {return false;}
   int   minVal() {return scoreDeli[0];}
   int   maxVal() {return scoreDeli[storedRecordNumber-2];}
+
+  // functions to help internalNode::insert()
+  bool insertABranch(int insertIndex, Node* newVal);
+  InternalNode* overflowSplit(bool ifNewAtThis);
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
