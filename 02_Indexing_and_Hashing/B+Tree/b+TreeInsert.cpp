@@ -43,19 +43,22 @@ Node* InternalNode::insert(float score, int blckN) {
   else
     insertIndex = 0;
 
+  if (blckN == 1000000)
+    std::cout << "insertIndex : " << insertIndex << std::endl;
+
   // 2. insert
   Node* newVal = branchs[insertIndex]->insert(score, blckN);
   
   // 3. update Deli vals for inserted ones
   scoreDeli[insertIndex-1] = branchs[insertIndex]->minVal();
 
-  // 4. if no new node
+  // 4. if no new child node
   if (newVal == NULL)
     return NULL;
 
-  // 5. if new node, insert new branch and deli
+  // 5. if new child node, insert new branch and deli
   //    (1) if no overflow
-  if (storedRecordNumber + 1 >= branchSize) {
+  if (storedRecordNumber + 1 <= branchSize) {
 
     if (insertABranch(insertIndex+1, newVal))
       return NULL;
@@ -72,6 +75,7 @@ Node* InternalNode::insert(float score, int blckN) {
     }
     else {// new record in next block
       InternalNode* nextInternal = overflowSplit(false);
+      std::cout << "insertIndex : " << insertIndex << "\tstoredRecordNumber : " << storedRecordNumber << "\t" << insertIndex+1 - storedRecordNumber<< std::endl;
       nextInternal->insertABranch(insertIndex+1 - storedRecordNumber, newVal);
 
       return nextInternal;
@@ -125,7 +129,7 @@ Node* TerminalNode::insert(float score, int blckN) {
       cpyRecordNum = storedRecordNumber - newRecordNum;
     }
     
-    std::cout << "cpy: " << cpyRecordNum << "\tnew: " << newRecordNum << std::endl;
+    //std::cout << "cpy: " << cpyRecordNum << "\tnew: " << newRecordNum << std::endl;
     for (int i = 0; i < cpyRecordNum; i++) {
       newNode->scores[i] = scores[i+newRecordNum];
       newNode->blockNum[i] = blockNum[i+newRecordNum];
@@ -172,10 +176,13 @@ bool InternalNode::insertABranch(int insertIndex, Node* newVal) { // insertIndex
   if (storedRecordNumber + 1 > branchSize) {
     return false;
   }
-  
-  for (int i = storedRecordNumber; i >= insertIndex; i--) {
-    branchs[i+1] = branchs[i];
-    scoreDeli[i] = scoreDeli[i-1];
+
+  //std::cout << "store : " << storedRecordNumber << "\tinsertIndex : " << insertIndex << std::endl;
+  if (storedRecordNumber != insertIndex) {
+    for (int i = storedRecordNumber; i >= insertIndex; i--) {
+      branchs[i+1] = branchs[i];
+      scoreDeli[i] = scoreDeli[i-1];
+    }
   }
 
   branchs[insertIndex] = newVal;
@@ -194,25 +201,28 @@ InternalNode* InternalNode::overflowSplit(bool ifNewAtThis) {
   int cpyRecordNum; // new number of next block
 
   if (ifNewAtThis) { // if the new node will be inserted in this node
-    cpyRecordNum = (storedRecordNumber + 1) / 2;
-    newStoreNum  = (storedRecordNumber + 1) - cpyRecordNum;
-  }
-  else { // if the new node will be inserted in next node
     newStoreNum  = (storedRecordNumber + 1) / 2;
     cpyRecordNum = (storedRecordNumber + 1) - newStoreNum;
   }
+  else { // if the new node will be inserted in next node
+    cpyRecordNum = (storedRecordNumber + 1) / 2;
+    newStoreNum  = (storedRecordNumber + 1) - cpyRecordNum;
+  }
+
+  //  std::cout << ifNewAtThis << "\tnew : " << newStoreNum << "\tcpy : " << cpyRecordNum << std::endl;
 
   // 2. copy to the new node
   InternalNode* newInternal = new InternalNode();
-  for (int i = 0; i < cpyRecordNum-1; i++) {
-    newInternal->branchs[i] = branchs[newStoreNum+i-1];
-    newInternal->scoreDeli[i] = scoreDeli[newStoreNum+i-1];
+  for (int i = 0; i < cpyRecordNum-2; i++) {
+    //std::cout << "i : " << i << std::endl;
+    newInternal->branchs[i] = branchs[newStoreNum+i];
+    newInternal->scoreDeli[i] = scoreDeli[newStoreNum+i];
   }
-  newInternal->branchs[cpyRecordNum-1] = branchs[storedRecordNumber - 1];
+  newInternal->branchs[cpyRecordNum-2] = branchs[storedRecordNumber - 1];
 
   // 3. set StoreNum vals
   storedRecordNumber = newStoreNum;
-  newInternal->storedRecordNumber = cpyRecordNum;
+  newInternal->storedRecordNumber = cpyRecordNum - 1; // will insert and be ++
 
   return newInternal;
 }

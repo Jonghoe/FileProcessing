@@ -30,7 +30,7 @@ class Node {
   virtual Node* insert(float score, int blckN) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
-  virtual void  print()  = 0;
+  virtual void  print(int)  = 0;
 };
 
 
@@ -61,7 +61,7 @@ protected:
   Node* insert(float score, int blckN);
   
 public:
-  void print();
+  void print(int);
 };
 
 
@@ -93,7 +93,7 @@ protected:
   Node* insert(float score, int blckN);
 
 public:
-  void print();
+  void print(int);
 };
 
 #endif
