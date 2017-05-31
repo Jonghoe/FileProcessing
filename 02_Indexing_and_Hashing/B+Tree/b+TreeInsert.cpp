@@ -26,7 +26,6 @@ bool BPlusTree::insert(float score, int blckN) {
 }
 
 Node* InternalNode::insert(float score, int blckN) {
-  /*
   // 1. find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
@@ -77,7 +76,7 @@ Node* InternalNode::insert(float score, int blckN) {
 
       return nextInternal;
     }
-  }*/
+  }
 }  
 
 Node* TerminalNode::insert(float score, int blckN) {
@@ -113,14 +112,27 @@ Node* TerminalNode::insert(float score, int blckN) {
     ifOverflow = true;
     TerminalNode* newNode = new TerminalNode();
 
-    int newRecordNum = storedRecordNumber / 2; // number of record for this block
-    for (int i = 0; i < newRecordNum; i++) {
+    
+    int cpyRecordNum; // number of record for next block
+    int newRecordNum; // number of record for this block
+
+    if (insertIndex < storedRecordNumber / 2 + 1) {
+      cpyRecordNum = (storedRecordNumber+1) / 2;
+      newRecordNum = storedRecordNumber - cpyRecordNum;
+    }
+    else {
+      newRecordNum = (storedRecordNumber+1) / 2;
+      cpyRecordNum = storedRecordNumber - newRecordNum;
+    }
+    
+    std::cout << "cpy: " << cpyRecordNum << "\tnew: " << newRecordNum << std::endl;
+    for (int i = 0; i < cpyRecordNum; i++) {
       newNode->scores[i] = scores[i+newRecordNum];
       newNode->blockNum[i] = blockNum[i+newRecordNum];
     }
     
     // rearrange record numbers
-    newNode->storedRecordNumber = storedRecordNumber - newRecordNum;
+    newNode->storedRecordNumber = cpyRecordNum;
     storedRecordNumber = newRecordNum;
 
     // switch links
