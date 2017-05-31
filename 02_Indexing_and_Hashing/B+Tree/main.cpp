@@ -4,19 +4,16 @@
 
 int main() {
   BPlusTree* tree = new BPlusTree();
-  //  for (int i = 1; i <= 10; i++)
-    tree->insert(3.0, 1);
-    //tree->print();
-    tree->insert(3.0, 2);
-    //tree->print();
-    tree->insert(4.0, 3);
-    //tree->print();
-    tree->insert(1.0, 4);
-    //tree->print();
-    tree->insert(2.0, 5);
-    //tree->print();
+  for (int i = 1; i <= 13; i++)
+    tree->insert(i, i+1000);
+  //tree->insert(12.5,1000000);
 
-    tree->insert(0.5, 6);
-    tree->print();
+  tree->insert(1,1);
+  tree->insert(2, 2);
+  tree->insert(3, 2);
+  tree->insert(4, 2);
+  tree->insert(5, 2);
+  tree->insert(3.5, 1000);
+  tree->print();
   return 0;
 }

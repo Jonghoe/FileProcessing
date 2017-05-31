@@ -43,9 +43,6 @@ Node* InternalNode::insert(float score, int blckN) {
   else
     insertIndex = 0;
 
-  if (blckN == 1000000)
-    std::cout << "insertIndex : " << insertIndex << std::endl;
-
   // 2. insert
   Node* newVal = branchs[insertIndex]->insert(score, blckN);
   
@@ -75,7 +72,7 @@ Node* InternalNode::insert(float score, int blckN) {
     }
     else {// new record in next block
       InternalNode* nextInternal = overflowSplit(false);
-      std::cout << "insertIndex : " << insertIndex << "\tstoredRecordNumber : " << storedRecordNumber << "\t" << insertIndex+1 - storedRecordNumber<< std::endl;
+      //std::cout << "insertIndex : " << insertIndex << "\tstoredRecordNumber : " << storedRecordNumber << "\t" << insertIndex+1 - storedRecordNumber<< std::endl;
       nextInternal->insertABranch(insertIndex+1 - storedRecordNumber, newVal);
 
       return nextInternal;
@@ -96,7 +93,7 @@ Node* TerminalNode::insert(float score, int blckN) {
   // 1.find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
-  if (maxVal() <= score)
+  if (maxVal() <= score) 
     insertIndex = storedRecordNumber;
   //   (2) checking other indice
   else if (!(score < minVal())) {
@@ -108,8 +105,9 @@ Node* TerminalNode::insert(float score, int blckN) {
   }
   //   (3) checking the first index
   else
-    insertIndex = 0;
+    insertIndex = 0;  
   
+  //std::cout << "store : " << storedRecordNumber << "\tinsert : " << insertIndex << std::endl;
   // 2. if overflow, split
   bool ifOverflow = false;
   if (size < storedRecordNumber + 1) {
@@ -142,10 +140,26 @@ Node* TerminalNode::insert(float score, int blckN) {
     // switch links
     newNode->nextTerminalNode = nextTerminalNode;
     nextTerminalNode = newNode;
-  }
 
-  // 3. insert (if range is in this block)
-  if (insertIndex <= storedRecordNumber) {
+    // 3. insert (if range is in this block)
+    if (insertIndex < storedRecordNumber) {
+      for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
+	scores[i+1] = scores[i];
+	blockNum[i+1] = blockNum[i];
+      }
+      scores[insertIndex] = score;
+      blockNum[insertIndex] = blckN;
+    
+      storedRecordNumber++;
+    }
+    else {
+      //std::cout << "asfdasdfasdf" << nextTerminalNode << std::endl;
+      nextTerminalNode->insert(score, blckN);
+    }
+
+    return nextTerminalNode;
+  }
+  else { // if no split, insert
     for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
       scores[i+1] = scores[i];
       blockNum[i+1] = blockNum[i];
@@ -154,16 +168,9 @@ Node* TerminalNode::insert(float score, int blckN) {
     blockNum[insertIndex] = blckN;
     
     storedRecordNumber++;
-  }
-  else {
-    nextTerminalNode->insert(score, blckN);
-  }
 
-  // 4. return
-  if (ifOverflow)
-    return nextTerminalNode;
-  else
     return NULL;
+  }
 }
 
 
