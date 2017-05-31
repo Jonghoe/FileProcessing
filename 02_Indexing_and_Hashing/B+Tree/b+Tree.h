@@ -20,6 +20,7 @@ public:
   bool insert(float score, int blckN);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
+  void print();
 };
 
 class Node {
@@ -29,6 +30,7 @@ class Node {
   virtual Node* insert(float score, int blckN) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
+  virtual void  print()  = 0;
 };
 
 
@@ -40,7 +42,7 @@ private:
   const int scoreSize;  //511
 
   // contents of the block
-  int storedRecordNumber;
+  int   storedRecordNumber;
   Node* branchs[512];
   float scoreDeli[511];
 
@@ -57,6 +59,9 @@ protected:
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   Node* insert(float score, int blckN);
+  
+public:
+  void print();
 };
 
 
@@ -86,6 +91,9 @@ protected:
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
   Node* insert(float score, int blckN);
+
+public:
+  void print();
 };
 
 #endif

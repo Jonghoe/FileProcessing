@@ -24,62 +24,8 @@ bool BPlusTree::insert(float score, int blckN) {
   }
 }
 
-
-// function to help internalNode::insert()
-// insert a branch into thhe internalNode
-bool InternalNode::insertABranch(int insertIndex, Node* newVal) { // insertIndex must be > 0
-  // if the insertion cause an overflow
-  if (storedRecordNumber + 1 > branchSize) {
-    return false;
-  }
-  
-  for (int i = storedRecordNumber; i >= insertIndex; i--) {
-    branchs[i+1] = branchs[i];
-    scoreDeli[i] = scoreDeli[i-1];
-  }
-
-  branchs[insertIndex] = newVal;
-  scoreDeli[insertIndex-1] = newVal->minVal();
-
-  storedRecordNumber++;
-  
-  return true;
-}
-
-// function to help internalNode::insert()
-// split a node in two
-InternalNode* InternalNode::overflowSplit(bool ifNewAtThis) {
-  // 1. calculate numbers in block
-  int newStoreNum;  // new number of this block
-  int cpyRecordNum; // new number of next block
-
-  if (ifNewAtThis) { // if the new node will be inserted in this node
-    cpyRecordNum = (storedRecordNumber + 1) / 2;
-    newStoreNum  = (storedRecordNumber + 1) - cpyRecordNum;
-  }
-  else { // if the new node will be inserted in next node
-    newStoreNum  = (storedRecordNumber + 1) / 2;
-    cpyRecordNum = (storedRecordNumber + 1) - newStoreNum;
-  }
-
-  // 2. copy to the new node
-  InternalNode* newInternal = new InternalNode();
-  for (int i = 0; i < cpyRecordNum-1; i++) {
-    newInternal->branchs[i] = branchs[newStoreNum+i-1];
-    newInternal->scoreDeli[i] = scoreDeli[newStoreNum+i-1];
-  }
-  newInternal->branchs[cpyRecordNum-1] = branchs[storedRecordNumber - 1];
-
-  // 3. set StoreNum vals
-  storedRecordNumber = newStoreNum;
-  newInternal->storedRecordNumber = cpyRecordNum;
-
-  return newInternal;
-}
-
-
-
 Node* InternalNode::insert(float score, int blckN) {
+  /*
   // 1. find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
@@ -130,12 +76,19 @@ Node* InternalNode::insert(float score, int blckN) {
 
       return nextInternal;
     }
-  }
+  }*/
 }  
 
-
-
 Node* TerminalNode::insert(float score, int blckN) {
+  // base case : first insert in the node
+  if (storedRecordNumber == 0) {
+    scores[0] = score;
+    blockNum[0] = blckN;
+    
+    storedRecordNumber++;
+    return NULL;
+  }
+  
   // 1.find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
@@ -194,6 +147,61 @@ Node* TerminalNode::insert(float score, int blckN) {
     return nextTerminalNode;
   else
     return NULL;
+}
+
+
+
+
+// function to help internalNode::insert()
+// insert a branch into thhe internalNode
+bool InternalNode::insertABranch(int insertIndex, Node* newVal) { // insertIndex must be > 0
+  // if the insertion cause an overflow
+  if (storedRecordNumber + 1 > branchSize) {
+    return false;
+  }
+  
+  for (int i = storedRecordNumber; i >= insertIndex; i--) {
+    branchs[i+1] = branchs[i];
+    scoreDeli[i] = scoreDeli[i-1];
+  }
+
+  branchs[insertIndex] = newVal;
+  scoreDeli[insertIndex-1] = newVal->minVal();
+
+  storedRecordNumber++;
+  
+  return true;
+}
+
+// function to help internalNode::insert()
+// split a node in two
+InternalNode* InternalNode::overflowSplit(bool ifNewAtThis) {
+  // 1. calculate numbers in block
+  int newStoreNum;  // new number of this block
+  int cpyRecordNum; // new number of next block
+
+  if (ifNewAtThis) { // if the new node will be inserted in this node
+    cpyRecordNum = (storedRecordNumber + 1) / 2;
+    newStoreNum  = (storedRecordNumber + 1) - cpyRecordNum;
+  }
+  else { // if the new node will be inserted in next node
+    newStoreNum  = (storedRecordNumber + 1) / 2;
+    cpyRecordNum = (storedRecordNumber + 1) - newStoreNum;
+  }
+
+  // 2. copy to the new node
+  InternalNode* newInternal = new InternalNode();
+  for (int i = 0; i < cpyRecordNum-1; i++) {
+    newInternal->branchs[i] = branchs[newStoreNum+i-1];
+    newInternal->scoreDeli[i] = scoreDeli[newStoreNum+i-1];
+  }
+  newInternal->branchs[cpyRecordNum-1] = branchs[storedRecordNumber - 1];
+
+  // 3. set StoreNum vals
+  storedRecordNumber = newStoreNum;
+  newInternal->storedRecordNumber = cpyRecordNum;
+
+  return newInternal;
 }
 
 #endif

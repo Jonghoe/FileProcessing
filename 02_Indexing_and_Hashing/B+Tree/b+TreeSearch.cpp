@@ -8,7 +8,6 @@ Node* BPlusTree::searchFirstMatch(float scoreLowerBound) {
   return rootNode->searchFirstMatch(scoreLowerBound);
 }
 
-
 // search for first corresponding score low bound
 Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
   // 1. checking the first index which is branch[0]
@@ -28,7 +27,6 @@ Node* InternalNode::searchFirstMatch(float scoreLowerBound) {
   }
 }
 
-TerminalNode::TerminalNode() : size(511), storedRecordNumber(0), nextTerminalNode(NULL) {}
 Node* TerminalNode::searchFirstMatch(float scoreLowerBound) {
   return this;
 }
