@@ -1,7 +1,9 @@
 #include "HashTable.h"
+#include<fstream>
 #include<iostream>
 HashTable::HashTable() :table(2), MASK(1), maxLevel(1),buckets(2)
 {
+	out.open("Students.hash", ios::binary);
 	buckets[0] = new Bucket();
 	buckets[1] = new Bucket();
 	table[0] = 0;
@@ -38,6 +40,8 @@ void HashTable::insert(Student & record)
 		backTable(half, buckets.size() - 1, buckets.back()->getLevel());
 		// 새로운 키값에 대한 이동
 		move(fitHash, half);
+		// 바뀐 테이블에 대한 내용 파일 저장
+		save();
 		// 다시 삽입.
 		insert(record);
 	}	
@@ -65,13 +69,24 @@ void HashTable::printBuckets()const
 	}
 }
 
+const vector<Bucket*>& HashTable::getBucket()const
+{
+	return buckets;
+}
+
+const vector<int>& HashTable::getTable()const
+{
+	return table;
+}
+
 bool HashTable::check(unsigned key)const
 {
 	int hash = findHash(key);
 	int blkNum = table[hash];
 	for (int i = 0; i < buckets[blkNum]->getSize(); ++i) {
-		if((*buckets[blkNum])[i].studentID==key)
+		if((*buckets[blkNum])[i].studentID==key){
 			return true;
+		}
 	}
 	return false;
 }
@@ -122,3 +137,7 @@ void HashTable::move(int first, int second)
 	}
 }
 
+void HashTable::save()
+{
+	// 해쉬태이블 내용 "Students.hash"에 저장
+}

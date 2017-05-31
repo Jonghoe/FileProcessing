@@ -22,4 +22,5 @@ public:
 	int insert(Student& data);
 	int getSize()const;
 	Student& operator[](int idx)const;
+	void save();
 };
