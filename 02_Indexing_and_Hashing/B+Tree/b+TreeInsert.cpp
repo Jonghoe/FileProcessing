@@ -106,13 +106,10 @@ Node* TerminalNode::insert(float score, int blckN) {
   //   (3) checking the first index
   else
     insertIndex = 0;
-
-  //  std::cout << "After 1. find : " << insertIndex  << std::endl;
   
   // 2. if overflow, split
   bool ifOverflow = false;
   if (size < storedRecordNumber + 1) {
-    //    std::cout << "2. If overflow" << std::endl;
     ifOverflow = true;
     TerminalNode* newNode = new TerminalNode();
 
@@ -133,10 +130,9 @@ Node* TerminalNode::insert(float score, int blckN) {
 
   // 3. insert (if range is in this block)
   if (insertIndex <= storedRecordNumber) {
-    //    std::cout << "In the 3. insert" << std::endl;
     for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
       scores[i+1] = scores[i];
-      blockNum[i+1] = scores[i];
+      blockNum[i+1] = blockNum[i];
     }
     scores[insertIndex] = score;
     blockNum[insertIndex] = blckN;

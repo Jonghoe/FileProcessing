@@ -49,8 +49,8 @@ private:
 protected:
   InternalNode();
   bool  ifTerminal() {return false;}
-  int   minVal() {return branchs[0]->minVal();}
-  int   maxVal() {return branchs[storedRecordNumber-1]->maxVal();}
+  int   minVal() {return scoreDeli[0];}
+  int   maxVal() {return scoreDeli[storedRecordNumber-2];}
 
   // functions to help internalNode::insert()
   bool insertABranch(int insertIndex, Node* newVal);
