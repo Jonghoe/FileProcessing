@@ -13,6 +13,15 @@ class BPlusTree{
 protected:
   Node* rootNode;
   void findNode(Node* node, ofstream& ofs);
+  template<typename TNode>
+  void printNode(Node* node, ofstream& ofs)
+  {
+	  TNode* tn = (TNode*)node;
+	  ofs<<bitset<32>(tn->allocatedBlockNumber)<<bitset<32>(tn->branchSize);
+	  for(int i = 0; i<tn->branchSize; ++i) {
+		  ofs<<bitset<32>(tn->branchs[i]->allocatedBlockNumber)<<bitset<32>(tn->scoreDeli[i]);
+	  }
+  }
 public:
   BPlusTree();
 
