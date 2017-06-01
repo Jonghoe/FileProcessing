@@ -19,7 +19,7 @@ public:
   bool storeTree();
   bool loadTree();
   
-  bool insert(float score, int blckN);
+  bool insert(float score, int idIn);
   TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
@@ -34,7 +34,7 @@ class Node {
   static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
-  virtual Node* insert(float score, int blckN) = 0;
+  virtual Node* insert(float score, int idIn) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
   virtual void  print(int)  = 0;
@@ -68,7 +68,7 @@ protected:
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
   
 public:
   void print(int indent);
@@ -83,7 +83,6 @@ class TerminalNode: public Node {
 private:
   const int size;
   
-
   // contents of the block
   int storedRecordNumber;
   TerminalNode* nextTerminalNode;
@@ -104,7 +103,7 @@ protected:
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
 
 public:
   void print(int indent);
