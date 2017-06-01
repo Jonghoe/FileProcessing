@@ -16,7 +16,7 @@ protected:
   void findNode(Node* node, ofstream& ofs);  
   void printNode(InternalNode* node, ofstream& ofs);
   void printNode(TerminalNode* node, ofstream& ofs);
-  
+  void reCreateTree(Node*,vector<InternalNode*>& ins, vector<TerminalNode*> tns);
 public:
   BPlusTree();
 
@@ -39,8 +39,8 @@ class Node {
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int idIn) = 0;
-  virtual int   minVal() = 0;
-  virtual int   maxVal() = 0;
+  virtual float minVal() = 0;
+  virtual float maxVal() = 0;
   virtual void  print(int)  = 0;
   virtual void  printWithBlockNum(int indent, const HashTable& hashTable) = 0;
 };
@@ -63,8 +63,8 @@ protected:
   
   InternalNode();
   bool  ifTerminal() {return false;}
-  int   minVal() {return scoreDeli[0];}
-  int   maxVal() {return scoreDeli[storedRecordNumber-2];}
+  float minVal() {return scoreDeli[0];}
+  float maxVal() {return scoreDeli[storedRecordNumber-2];}
 
   // functions to help internalNode::insert()
   bool insertABranch(int insertIndex, Node* newVal);
@@ -102,8 +102,8 @@ protected:
   
   TerminalNode();
   bool  ifTerminal() {return true;}
-  int   minVal() {return scores[0];}
-  int   maxVal() {return scores[storedRecordNumber-1];}
+  float minVal() {return scores[0];}
+  float maxVal() {return scores[storedRecordNumber-1];}
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
