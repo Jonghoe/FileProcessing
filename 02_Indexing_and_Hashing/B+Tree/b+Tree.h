@@ -12,7 +12,7 @@ class TerminalNode;
 class BPlusTree{
 protected:
   Node* rootNode;
-  
+  void findNode(Node* node, ofstream& ofs);
 public:
   BPlusTree();
 
