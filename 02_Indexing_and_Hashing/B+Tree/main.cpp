@@ -20,6 +20,8 @@ int main() {
   
 
   tree->print();
+
+  
   //HashTable* htb = new HashTable();
   //tree->printWithBlockNum(*htb);
 

@@ -16,7 +16,7 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
     findFirstNode = findFirstNode->nextTerminalNode;
 
   if (findFirstNode != NULL)
-    findFirstNode->print(0);
+    findFirstNode->print(0); // this might be changed into printWithBlockNum
   else
     cout << "this is not in range" << endl;
 }
