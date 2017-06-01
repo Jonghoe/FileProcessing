@@ -7,35 +7,14 @@ using namespace std;
 int main()
 {
 	
-<<<<<<< HEAD
 	ifstream ifs("sampleData.csv",ios::in);
-=======
-	ifstream ifs("./sampleData.csv");
->>>>>>> dfb47c3088276970e40d3eab8e75f95bd669ec72
 	string data;
 	char buffer[1024];
 	HashTable tlb;
 	vector<Student> students;
 	ifs.getline(buffer, 1024);
 	int num = atoi(buffer);
-	// 버킷 넘버 데이터 수 버킷 레벨
-	const vector<Bucket*> buck = tlb.getBucket();
-	string filePath = "Student.DB";
-	ofstream writeFile(filePath.data(), ios::binary);
-	for(int i = 0; i<buck.size(); ++i) {
-		writeFile << bitset<32>(buck[i]->getBlkNum())<< ' ';
-		writeFile << bitset<32>(buck[i]->getSize())<<' ';
-		writeFile << bitset<32>(buck[i]->getLevel())<<endl;;
-		const Bucket& b = *buck[i];
-		for(int j = 0; j<buck[0]->getSize(); ++j) {
-			writeFile << bitset<32>(b[j].advisorID) <<' ';
-			writeFile << b[j].name << ' ';
-			writeFile << bitset<32>(b[j].score)<< ' ';
-			writeFile << bitset<32>(b[j].studentID)<<endl;
-		}
-	}
-	writeFile.close();
-//	tlb.
+
 	const vector<int>& tb = tlb.getTable();
 	
 	for(int i=0;i<num;++i){
@@ -73,19 +52,4 @@ int main()
 	cout << "==================================================" << endl;
 	tlb.printBuckets();
 	cout << "##################################################" << endl;
-<<<<<<< HEAD
-	
-=======
-	/*
-	cout << "##################################################" << endl;
->>>>>>> dfb47c3088276970e40d3eab8e75f95bd669ec72
-	for (int i = 0; i < students.size(); ++i) {
-		if (!tlb.check(students[i].studentID))
-			cout << bitset<32>(students[i].studentID) << ": " << tlb.findHash(students[i].studentID) << endl;
-	}
-<<<<<<< HEAD
 }
-=======
-	*/
-}
->>>>>>> dfb47c3088276970e40d3eab8e75f95bd669ec72
