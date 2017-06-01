@@ -8,15 +8,16 @@ protected:
 	int MASK;
 	int maxLevel;
 	vector<int> table;
-	vector<Bucket> buckets;
+	vector<Bucket*> buckets;
 
 public:
 	HashTable();
-	void insert(Student& record);
+	HashTable(const vector<int>& tb, const vector<Bucket*>& b);	
+	void insert(Student& record);	
 	int findHash(unsigned key)const;
 	void printTable()const;
 	void printBuckets()const;
-	const vector<Bucket>& getBucket()const;
+	const vector<Bucket*>& getBucket()const;
 	const vector<int>& getTable()const;
 	unsigned getBlkNum(int key)const;
 	// 키값이 유요한지 확인
