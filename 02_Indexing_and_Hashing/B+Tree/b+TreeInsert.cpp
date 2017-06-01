@@ -28,27 +28,28 @@ bool BPlusTree::insert(float score, int idIn) {
 Node* InternalNode::insert(float score, int idIn) {
   // 1. find where to insert
   int insertIndex = 0;
-  //   (1) checking the last index
-  if (maxVal() <= score) {
-    //std::cout << "this is max - maxVal() :" << maxVal() << "score : " << score << std::endl;
-    insertIndex = storedRecordNumber - 1;
-  }
-  //   (2) checking the first index
-  else if (score < minVal()) {
+  
+  //   (1) checking the first index
+  if (score <= minVal()) {
     //std::cout << "this is min" << std::endl;
     insertIndex = 0;
   }
+  //   (2) checking the last index
+  else if (maxVal() <= score) {
+    //std::cout << "this is max - maxVal() :" << maxVal() << "score : " << score << std::endl;
+    insertIndex = storedRecordNumber - 1;
+  }
   //   (3) checking other indice
   else {
-    //std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
-    for(int i = storedRecordNumber - 2; i >= 0; i--)
-      if (scoreDeli[i] <= score) {
-	insertIndex = i+1;
+    //    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
+    for(int i = i; i < storedRecordNumber; i++)
+      if (score <= scoreDeli[i]) {
+	insertIndex = i;
 	break;
       }
   }
 
-  //  std::cout << "Internal node - score : " << score << "\tblckN :" << blckN << "\tinsertIndex : " << insertIndex << std:: endl;
+  //  std::cout << "Internal node - score : " << score << "\tstudIn :" << idIn << "\tinsertIndex : " << insertIndex << std:: endl;
   // 2. insert
   Node* newVal = branchs[insertIndex]->insert(score, idIn);
   
@@ -95,6 +96,20 @@ Node* TerminalNode::insert(float score, int idIn) {
     storedRecordNumber++;
     return NULL;
   }
+  // exception
+  if (nextTerminalNode != NULL){
+    // (1) this should be in the next node
+    if ( nextTerminalNode->minVal() < score) {
+      std::cout << "go to next terminal not in right place" << std::endl;
+      return nextTerminalNode->insert(score, idIn);
+    }
+    // (2) will be overflowed but it's ok to be inserted next node
+    //     when score = next->min
+    else if (storedRecordNumber + 1 > size && nextTerminalNode->minVal() == score) {
+      //      std::cout << "go to next terminal 'cause overflow" << std::endl;
+      return nextTerminalNode->insert(score, idIn);
+    }
+  }
   
   // 1.find where to insert
   int insertIndex = 0;
@@ -113,7 +128,8 @@ Node* TerminalNode::insert(float score, int idIn) {
   else
     insertIndex = 0;  
   
-  //std::cout << "store : " << storedRecordNumber << "\tinsert : " << insertIndex << std::endl;
+    //  std::cout << "score : " << score << "\tstdNum : " << idIn << std::endl;
+  //  std::cout << "store : " << storedRecordNumber << "\tinsert : " << insertIndex << std::endl << std::endl;
   // 2. if overflow, split
   bool ifOverflow = false;
   if (size < storedRecordNumber + 1) {
