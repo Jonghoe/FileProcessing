@@ -34,16 +34,16 @@ Node* InternalNode::insert(float score, int idIn) {
     insertIndex = storedRecordNumber - 1;
   }
   //   (2) checking the first index
-  else if (score < minVal()) {
+  else if (score <= minVal()) {
     //std::cout << "this is min" << std::endl;
     insertIndex = 0;
   }
   //   (3) checking other indice
   else {
     //std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
-    for(int i = storedRecordNumber - 2; i >= 0; i--)
-      if (scoreDeli[i] <= score) {
-	insertIndex = i+1;
+    for(int i = i; i < storedRecordNumber; i++)
+      if (score <= scoreDeli[i]) {
+	insertIndex = i;
 	break;
       }
   }
@@ -94,6 +94,16 @@ Node* TerminalNode::insert(float score, int idIn) {
     
     storedRecordNumber++;
     return NULL;
+  }
+  // exception
+  if (nextTerminalNode != NULL){
+    // (1) this should be in the next node
+    if ( nextTerminalNode->minVal() < score)
+      return nextTerminalNode->insert(score, idIn);
+    // (2) will be overflowed but it's ok to be inserted next node
+    //     when score = next->min
+    else if (storedRecordNumber + 1 && nextTerminalNode->minVal() == score)
+      return nextTerminalNode->insert(score, idIn);
   }
   
   // 1.find where to insert
