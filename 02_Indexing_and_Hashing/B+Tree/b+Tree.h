@@ -39,7 +39,7 @@ class Node {
   int   allocatedBlockNumber;
   static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
-  virtual bool  deleteTree();
+  virtual bool  deleteTree() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int idIn) = 0;
   virtual float minVal() = 0;
