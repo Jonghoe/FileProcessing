@@ -7,7 +7,7 @@ using namespace std;
 int main()
 {
 	
-	ifstream ifs("sampleData.csv");
+	ifstream ifs("sampleData.csv",ios::in);
 	string data;
 	char buffer[1024];
 	HashTable tlb;
@@ -23,8 +23,10 @@ int main()
 		char *data;
 		
 		data = strtok(buff, ",");
-		strcpy(stu.name,data);
 		next = strlen(data);
+		int j = MyStrCpy(stu.name, data);
+		
+		cout << stu.name;
 		buff = buff + next+1;
 
 		data = strtok(buff, ",");
@@ -46,12 +48,11 @@ int main()
 
 	ifs.close();
 	cout << "==================================================" << endl;
-	tlb.printTable();
+	tlb.printBuckets();
 	cout << "##################################################" << endl;
 	
-	cout << "##################################################" << endl;
 	for (int i = 0; i < students.size(); ++i) {
-		if (tlb.check(students[i].studentID))
+		if (!tlb.check(students[i].studentID))
 			cout << bitset<32>(students[i].studentID) << ": " << tlb.findHash(students[i].studentID) << endl;
 	}
 }
