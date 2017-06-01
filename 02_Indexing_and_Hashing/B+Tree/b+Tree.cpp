@@ -10,3 +10,19 @@ int Node::blockNumCounter = 1000000000;
 InternalNode::InternalNode() : branchSize(512), scoreSize(511), storedRecordNumber(0) {}
 TerminalNode::TerminalNode() : size(511), storedRecordNumber(0), nextTerminalNode(NULL) {}
 
+bool BPlusTree::deleteTree() {
+  rootNode->deleteTree();
+  delete[] rootNode;
+  //  rootNode = new TerminalNode();
+}
+
+bool InternalNode::deleteTree() {
+  for (int i = 0; i < storedRecordNumber; i++) {
+    branchs[i]->deleteTree();
+    delete[] branchs[i];
+  }
+}
+
+bool TerminalNode::deleteTree() {
+  return true;
+}

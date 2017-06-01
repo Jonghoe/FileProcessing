@@ -22,6 +22,8 @@ public:
 
   bool storeTree();
   bool loadTree();
+
+  bool deleteTree();
   
   bool insert(float score, int idIn);
   TerminalNode* findKthTerminal(int k);
@@ -37,6 +39,7 @@ class Node {
   int   allocatedBlockNumber;
   static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
+  virtual bool  deleteTree();
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int idIn) = 0;
   virtual float minVal() = 0;
@@ -65,6 +68,8 @@ protected:
   bool  ifTerminal() {return false;}
   float minVal() {return scoreDeli[0];}
   float maxVal() {return scoreDeli[storedRecordNumber-2];}
+
+  bool deleteTree();
 
   // functions to help internalNode::insert()
   bool insertABranch(int insertIndex, Node* newVal);
@@ -104,6 +109,8 @@ protected:
   bool  ifTerminal() {return true;}
   float minVal() {return scores[0];}
   float maxVal() {return scores[storedRecordNumber-1];}
+
+  bool deleteTree();
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
