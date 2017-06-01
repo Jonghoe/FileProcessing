@@ -2,6 +2,7 @@
 #include<iostream>
 #include"Bucket.h"
 #include<cassert>
+using namespace std;
 int Bucket::nextBlkNum = 0;
 Bucket::Bucket() :size(0), capacity((BLOCK_SIZE)/sizeof(Student)), blkNum(nextBlkNum++), level(1)
 {
@@ -36,7 +37,6 @@ Student& Bucket::operator[](int idx)const
 
 void Bucket::save()
 {
-	
 }
 
 int Bucket::insert(Student & data)
