@@ -6,7 +6,6 @@ class Node;
 class InternalNode;
 class TerminalNode;
 
-
 class BPlusTree{
 protected:
   Node* rootNode;
@@ -25,6 +24,8 @@ public:
 
 class Node {
  public:
+  //  virtual int   allocatedBlockNumber;
+  static int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int blckN) = 0;
@@ -40,6 +41,7 @@ class InternalNode: public Node {
 private:
   const int branchSize; //512
   const int scoreSize;  //511
+  const int allocatedBlockNumber;
 
   // contents of the block
   int   storedRecordNumber;
@@ -71,12 +73,13 @@ class TerminalNode: public Node {
   
 private:
   const int size;
+  const int allocatedBlockNumber;
 
   // contents of the block
   int storedRecordNumber;
   TerminalNode* nextTerminalNode;
   float scores[511];
-  int   blockNum[511]; // this should be changed into pointer
+  int   blockNum[511]; // this should be changed into studentNumber
 
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
