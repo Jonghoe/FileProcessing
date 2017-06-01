@@ -1,16 +1,14 @@
 #pragma once
 #include<vector>
 #include"Bucket.h"
-#include<fstream>
 using namespace std;
 class HashTable {
 
 protected:
 	int MASK;
 	int maxLevel;
-	ofstream out;
 	vector<int> table;
-	vector<Bucket*> buckets;
+	vector<Bucket> buckets;
 
 public:
 	HashTable();
@@ -18,8 +16,9 @@ public:
 	int findHash(unsigned key)const;
 	void printTable()const;
 	void printBuckets()const;
-	const vector<Bucket*>& getBucket()const;
+	const vector<Bucket>& getBucket()const;
 	const vector<int>& getTable()const;
+	unsigned getBlkNum(int key)const;
 	// 키값이 유요한지 확인
 	bool check(unsigned key)const;
 	~HashTable();
@@ -35,6 +34,7 @@ private:
 	//		1100 -> 0		1100 -> 0
 	//		1110 -> 1		1110 -> 4
 	//		1010 -> 1		1010 -> 1
+
 	void backTable(int hash, int blkNum, int level);
 	// bucket의 level중 현재까지 최대 level보다 큰 bucket이 생기면 table의 수를 2배로 늘려준다.
 	void modifyTable();
@@ -44,7 +44,6 @@ private:
 	
 	// blocking factor를 넘어서 block을 둘로 나눌때 사용
 	void move(int src, int dst);
-
-	// 파일 저장
-	void save();
 };
+
+int MyStrCpy(char* dst, const char* src);
