@@ -1,8 +1,9 @@
 
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
-#include"../Index_Hashing//HashTable.h"
-
+#include "../Index_Hashing//HashTable.h"
+#include <fstream>
+using namespace std;
 
 class BPlusTree;
 class Node;
