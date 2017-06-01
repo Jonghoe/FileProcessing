@@ -90,7 +90,7 @@ Node* TerminalNode::insert(float score, int blckN) {
   // base case : first insert in the node
   if (storedRecordNumber == 0) {
     scores[0] = score;
-    blockNum[0] = blckN;
+    studID[0] = blckN;
     
     storedRecordNumber++;
     return NULL;
@@ -136,7 +136,7 @@ Node* TerminalNode::insert(float score, int blckN) {
     //std::cout << "cpy: " << cpyRecordNum << "\tnew: " << newRecordNum << std::endl;
     for (int i = 0; i < cpyRecordNum; i++) {
       newNode->scores[i] = scores[i+newRecordNum];
-      newNode->blockNum[i] = blockNum[i+newRecordNum];
+      newNode->studID[i] = studID[i+newRecordNum];
     }
     
     // rearrange record numbers
@@ -151,10 +151,10 @@ Node* TerminalNode::insert(float score, int blckN) {
     if (insertIndex < storedRecordNumber) {
       for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
 	scores[i+1] = scores[i];
-	blockNum[i+1] = blockNum[i];
+	studID[i+1] = studID[i];
       }
       scores[insertIndex] = score;
-      blockNum[insertIndex] = blckN;
+      studID[insertIndex] = blckN;
     
       storedRecordNumber++;
     }
@@ -168,10 +168,10 @@ Node* TerminalNode::insert(float score, int blckN) {
   else { // if no split, insert
     for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
       scores[i+1] = scores[i];
-      blockNum[i+1] = blockNum[i];
+      studID[i+1] = studID[i];
     }
     scores[insertIndex] = score;
-    blockNum[insertIndex] = blckN;
+    studID[insertIndex] = blckN;
     
     storedRecordNumber++;
 

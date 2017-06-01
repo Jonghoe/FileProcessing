@@ -44,11 +44,11 @@ void InternalNode::print(int indent) {
   cout << "num of records : " << storedRecordNumber << endl;
   for (int i = 0; i < storedRecordNumber-1; i++) {
     indentPrint(indent);
-    cout << "branchs[" << i << "] : " << branchs[i] << "\t";
+    cout << "branchs[" << i << "] : " << branchs[i]->allocatedBlockNumber << "\t";
     cout << "scoreDeli[" << i << "] : " << scoreDeli[i] << endl;
   }
   indentPrint(indent);
-  cout << "branchs[" << storedRecordNumber-1 << "] : " << branchs[storedRecordNumber-1] << endl << endl;
+  cout << "branchs[" << storedRecordNumber-1 << "] : " << branchs[storedRecordNumber-1]->allocatedBlockNumber << endl << endl;
 
   for (int i = 0; i < storedRecordNumber; i++) {
     indentPrint(indent);
@@ -64,7 +64,7 @@ void TerminalNode::print(int indent) {
   for (int i = 0; i < storedRecordNumber; i++) {
     indentPrint(indent);
     cout << "scores[" << i << "] : " << scores[i] << "\t";
-    cout << "blocks[" << i << "] : " << blockNum[i] << endl;
+    cout << "studID[" << i << "] : " << studID[i] << endl;
   }
   cout << endl;
 }
@@ -72,11 +72,11 @@ void TerminalNode::print(int indent) {
 
 
 // actually print blockNum
-void BPlusTree::printWithBlockNum(int* hashTable) {
+void BPlusTree::printWithBlockNum(const HashTable& hashTable) {
   rootNode->printWithBlockNum(0, hashTable);
 }
 
-void InternalNode::printWithBlockNum(int indent, int* hashTable) {
+void InternalNode::printWithBlockNum(int indent, const HashTable& hashTable) {
   indentPrint(indent);
   cout << "<<Internal Node>> : " << allocatedBlockNumber << endl;
   indentPrint(indent);
@@ -96,7 +96,7 @@ void InternalNode::printWithBlockNum(int indent, int* hashTable) {
   }
 }
 
-void TerminalNode::printWithBlockNum(int indent, int* hashTable) {
+void TerminalNode::printWithBlockNum(int indent, const HashTable& hashTable) {
   indentPrint(indent);
   cout << "<<Terminal Node>> : " << allocatedBlockNumber << endl;
   indentPrint(indent);
@@ -104,7 +104,8 @@ void TerminalNode::printWithBlockNum(int indent, int* hashTable) {
   for (int i = 0; i < storedRecordNumber; i++) {
     indentPrint(indent);
     cout << "scores[" << i << "] : " << scores[i] << "\t";
-    cout << "blocks[" << i << "] : " << blockNum[i] << endl; // this part should be changed into blockNums
+    cout << "blocks[" << i << "] : " << studID[i] << endl;
+    //cout << "blocks[" << i << "] : " << hashTable.getBlkNum(blockNum[i]) << endl;
   }
   cout << endl;
 }

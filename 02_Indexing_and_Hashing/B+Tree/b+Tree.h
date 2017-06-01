@@ -1,7 +1,8 @@
-#include "../Index_Hashing/HashTable.h"
 
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+
+#include "../Index_Hashing/HashTable.h"
 
 class BPlusTree;
 class Node;
@@ -23,7 +24,7 @@ public:
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   void print();
-  void printWithBlockNum(int*hashTable);
+  void printWithBlockNum(const HashTable& hashTable);
 };
 
 class Node {
@@ -37,7 +38,7 @@ class Node {
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
   virtual void  print(int)  = 0;
-  virtual void  printWithBlockNum(int indent, int* hashTable) = 0;
+  virtual void  printWithBlockNum(int indent, const HashTable& hashTable) = 0;
 };
 
 
@@ -71,7 +72,7 @@ protected:
   
 public:
   void print(int indent);
-  void printWithBlockNum(int indent, int* hashTable);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 
@@ -87,7 +88,7 @@ private:
   int storedRecordNumber;
   TerminalNode* nextTerminalNode;
   float scores[511];
-  int   blockNum[511]; // this should be changed into studentNumber
+  int   studID [511]; // this should be changed into studentNumber
 
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
@@ -107,7 +108,7 @@ protected:
 
 public:
   void print(int indent);
-  void printWithBlockNum(int indent, int* hashTable);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 #endif
