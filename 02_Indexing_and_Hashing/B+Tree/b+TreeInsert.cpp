@@ -29,20 +29,26 @@ Node* InternalNode::insert(float score, int blckN) {
   // 1. find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
-  if (maxVal() <= score)
+  if (maxVal() <= score) {
+    std::cout << "this is max - maxVal() :" << maxVal() << "score : " << score << std::endl;
     insertIndex = storedRecordNumber - 1;
-  //   (2) checking other indice
-  else if (!(score < minVal())) {
-    for(int i = storedRecordNumber - 2; i > 0; i--)
+  }
+  //   (2) checking the first index
+  else if (score < minVal()) {
+    std::cout << "this is min" << std::endl;
+    insertIndex = 0;
+  }
+  //   (3) checking other indice
+  else {
+    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
+    for(int i = storedRecordNumber - 2; i >= 0; i--)
       if (scoreDeli[i] <= score) {
-	insertIndex = i;
+	insertIndex = i+1;
 	break;
       }
   }
-  //   (3) checking the first index
-  else
-    insertIndex = 0;
 
+  std::cout << "Internal node - score : " << score << "\tblckN :" << blckN << "\tinsertIndex : " << insertIndex << std:: endl;
   // 2. insert
   Node* newVal = branchs[insertIndex]->insert(score, blckN);
   
