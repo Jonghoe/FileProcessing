@@ -1,6 +1,7 @@
 #include "b+Tree.h"
 #include <iostream>
-
+#include <fstream>
+#include <bitset>
 #ifndef BPLUSTREEIO_CPP
 #define BPLUSTREEIO_CPP
 
@@ -20,12 +21,34 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
   else
     cout << "this is not in range" << endl;
 }
+void printNode(Node* node, ofstream& ofs)
+{
+	TerminalNode* tn;
+	InternalNode* in;
+	if(node->ifTerminal())
+		tn = (TerminalNode*)node;
+	else
+		in = (InternalNode*)node;
+	ofs << bitset<32>(node->allocatedBlockNumber) << bitset<32>(in->);
+	for(int i = 0; i<node->blockNumCounter; ++i) {
 
+	}
+}
+void findNode(Node* node, ofstream& ofs){
+	if(node->ifTerminal())
+		;
+}
 // store B+Tree into Students_score.idx
-bool BPlusTree::storeTree() {} // tngud's part (store the structure in a file)
+bool BPlusTree::storeTree() {
+	((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
+
+
+} // tngud's part (store the structure in a file)
 
 // load B+Tree from Students_score.idx
-bool BPlusTree::loadTree() {}  // tngus's part (read the structure from a file)
+bool BPlusTree::loadTree() {
+
+}  // tngus's part (read the structure from a file)
 
 
 
