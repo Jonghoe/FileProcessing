@@ -41,7 +41,7 @@ Node* InternalNode::insert(float score, int idIn) {
   }
   //   (3) checking other indice
   else {
-    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
+    //    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
     for(int i = i; i < storedRecordNumber; i++)
       if (score <= scoreDeli[i]) {
 	insertIndex = i;
@@ -49,7 +49,7 @@ Node* InternalNode::insert(float score, int idIn) {
       }
   }
 
-  std::cout << "Internal node - score : " << score << "\tstudIn :" << idIn << "\tinsertIndex : " << insertIndex << std:: endl;
+  //  std::cout << "Internal node - score : " << score << "\tstudIn :" << idIn << "\tinsertIndex : " << insertIndex << std:: endl;
   // 2. insert
   Node* newVal = branchs[insertIndex]->insert(score, idIn);
   
@@ -99,12 +99,16 @@ Node* TerminalNode::insert(float score, int idIn) {
   // exception
   if (nextTerminalNode != NULL){
     // (1) this should be in the next node
-    if ( nextTerminalNode->minVal() < score)
+    if ( nextTerminalNode->minVal() < score) {
+      std::cout << "go to next terminal not in right place" << std::endl;
       return nextTerminalNode->insert(score, idIn);
+    }
     // (2) will be overflowed but it's ok to be inserted next node
     //     when score = next->min
-    else if (storedRecordNumber + 1 > size && nextTerminalNode->minVal() == score)
+    else if (storedRecordNumber + 1 > size && nextTerminalNode->minVal() == score) {
+      //      std::cout << "go to next terminal 'cause overflow" << std::endl;
       return nextTerminalNode->insert(score, idIn);
+    }
   }
   
   // 1.find where to insert
@@ -123,7 +127,7 @@ Node* TerminalNode::insert(float score, int idIn) {
   //   (3) checking the first index
   else
     insertIndex = 0;  
-
+  
     //  std::cout << "score : " << score << "\tstdNum : " << idIn << std::endl;
   //  std::cout << "store : " << storedRecordNumber << "\tinsert : " << insertIndex << std::endl << std::endl;
   // 2. if overflow, split
