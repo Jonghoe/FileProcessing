@@ -17,6 +17,7 @@ public:
   bool readTree();
   
   bool insert(float score, int blckN);
+  TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   void print();
@@ -25,7 +26,7 @@ public:
 class Node {
  public:
   //  virtual int   allocatedBlockNumber;
-  static int   blockNumCounter;
+  static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int blckN) = 0;
