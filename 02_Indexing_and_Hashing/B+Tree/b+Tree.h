@@ -1,7 +1,8 @@
-#include "../Index_Hashing/HashTable.h"
 
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+
+#include "../Index_Hashing/HashTable.h"
 
 class BPlusTree;
 class Node;
@@ -18,12 +19,12 @@ public:
   bool storeTree();
   bool loadTree();
   
-  bool insert(float score, int blckN);
+  bool insert(float score, int idIn);
   TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   void print();
-  void printWithBlockNum(int*hashTable);
+  void printWithBlockNum(const HashTable& hashTable);
 };
 
 class Node {
@@ -33,11 +34,11 @@ class Node {
   static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
-  virtual Node* insert(float score, int blckN) = 0;
+  virtual Node* insert(float score, int idIn) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
   virtual void  print(int)  = 0;
-  virtual void  printWithBlockNum(int indent, int* hashTable) = 0;
+  virtual void  printWithBlockNum(int indent, const HashTable& hashTable) = 0;
 };
 
 
@@ -67,11 +68,11 @@ protected:
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
   
 public:
   void print(int indent);
-  void printWithBlockNum(int indent, int* hashTable);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 
@@ -82,12 +83,11 @@ class TerminalNode: public Node {
 private:
   const int size;
   
-
   // contents of the block
   int storedRecordNumber;
   TerminalNode* nextTerminalNode;
   float scores[511];
-  int   blockNum[511]; // this should be changed into studentNumber
+  int   studID [511]; // this should be changed into studentNumber
 
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
@@ -103,11 +103,11 @@ protected:
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
 
 public:
   void print(int indent);
-  void printWithBlockNum(int indent, int* hashTable);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 #endif
