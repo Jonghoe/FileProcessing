@@ -60,7 +60,7 @@ bool TerminalNode::cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft) 
     if (i >= storedRecordNumber)
       break;
 
-    blockNums[startIndex] = blockNum[i++];
+    studID[startIndex] = studID[i++];
     
     startIndex++;
     cpyLeft--;
@@ -103,7 +103,7 @@ int* TerminalNode::search(float scoreLowerBound, float scoreUpperBound) {
 
   int cpyedNum = 0;
   for(int i = startIndex; i < endIndex; i++)
-    blockNums[cpyedNum++] = blockNum[i]; // copy matching records in this block
+    studID[cpyedNum++] = studID[i]; // copy matching records in this block
   cpyMatchRecords( blockNums, cpyedNum, matchSize - cpyedNum); // copy in others
 
   // 4. return

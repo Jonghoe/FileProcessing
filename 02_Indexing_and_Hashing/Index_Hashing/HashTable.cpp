@@ -3,11 +3,22 @@
 #include<iostream>
 HashTable::HashTable() :table(2), MASK(1), maxLevel(1),buckets(2)
 {
-	out.open("Students.hash", ios::binary);
-	buckets[0] = new Bucket();
-	buckets[1] = new Bucket();
+	buckets.push_back(new Bucket());
+	buckets.push_back(new Bucket());
 	table[0] = 0;
 	table[1] = 1;
+}
+
+HashTable::HashTable(const vector<int>& tb,const vector<Bucket*>& b)
+{
+	table = tb;
+	maxLevel = 0;
+
+	for (; pow(2, maxLevel) < tb.size(); ++maxLevel)
+		;	
+	for (int i = 0; i < b.size(); ++i) {
+		buckets.push_back(b[i]);
+	}
 }
 
 void HashTable::insert(Student & record)
@@ -20,7 +31,7 @@ void HashTable::insert(Student & record)
 	int err = buckets[blkNum]->insert(record);
 	if (err == -1 ) {
 		// 오버플로우난 bucket의 레벨에 맞게금 mask와 hash 조정
-		int fitMask = (1 << buckets[blkNum]->getLevel() - 1) - 1;
+		int fitMask = (1 << (buckets[blkNum]->getLevel() - 1)) - 1;
 		int fitHash = (fitMask)&hash;
 		// 오버플로우 발생하여 새로 생길 버킷에 대한 키 값(최상위 비트에 1추가)
 		int half = fitHash | (fitMask + 1);	
@@ -33,15 +44,13 @@ void HashTable::insert(Student & record)
 			modifyMask();
 		}
 		// 버킷을 생성
-		buckets.push_back(new Bucket(buckets[blkNum]->getLevel()));								
+		buckets.push_back(new Bucket(buckets[blkNum]->getLevel()));
 		// 테이블에 버킷number 저장
 		table[half] = buckets.back()->getBlkNum();
 		// 테이블 조정
 		backTable(half, buckets.size() - 1, buckets.back()->getLevel());
 		// 새로운 키값에 대한 이동
 		move(fitHash, half);
-		// 바뀐 테이블에 대한 내용 파일 저장
-		save();
 		// 다시 삽입.
 		insert(record);
 	}	
@@ -54,17 +63,22 @@ int HashTable::findHash(unsigned key)const
 
 void HashTable::printTable()const
 {
-	for (int i = 0; i < table.size(); ++i) {
+	for (unsigned i = 0; i < table.size(); ++i) {
 		cout << "Idx[" << i << "] ="<<table[i]<<endl;		
 	}	
 }
 
 void HashTable::printBuckets()const
 {
-	for (int i = 0; i < buckets.size(); ++i) {
+	for (unsigned i = 0; i < buckets.size(); ++i) {
 		cout << "==================buckets[" << i << ", " << buckets[i]->getLevel()<< " ]=================" << endl;
 		for (int j = 0; j < buckets[i]->getSize(); ++j) {
-			cout << "stu: " << (*buckets[i])[j].name << " ID: " << (*buckets[i])[j].studentID << endl;
+			char name[21];
+			int k = MyStrCpy(name, (*buckets[i])[j].name);
+			if (k > 20)
+				k = 20;
+			name[k] = '\0';
+			cout << "stu: " << name << " ID: " << (*buckets[i])[j].studentID << endl;
 		}
 	}
 }
@@ -77,6 +91,11 @@ const vector<Bucket*>& HashTable::getBucket()const
 const vector<int>& HashTable::getTable()const
 {
 	return table;
+}
+
+unsigned HashTable::getBlkNum(int key) const
+{
+	return table[findHash(key)];
 }
 
 bool HashTable::check(unsigned key)const
@@ -93,15 +112,12 @@ bool HashTable::check(unsigned key)const
 
 HashTable::~HashTable()
 {	
-	for (int i = 0; i < buckets.size(); ++i) {
-		delete buckets[i];
-	}
 }
 void HashTable::modifyTable()
 {
 	//테이블의 크기를 2배로 늘리고 최상위 비트아래 비트들만 mask값을 이용
 	table.resize(table.size() * 2);
-	for (int i = table.size() / 2; i < table.size(); ++i) {
+	for (unsigned i = table.size() / 2; i < table.size(); ++i) {
 		table[i] = table[i & MASK];
 	}	
 }
@@ -136,8 +152,11 @@ void HashTable::move(int first, int second)
 		}
 	}
 }
-
-void HashTable::save()
+int MyStrCpy(char* dst, const char* src)
 {
-	// 해쉬태이블 내용 "Students.hash"에 저장
+	int i = 0;
+	for (; *src != '\0'&&i<20; ++src, ++dst,++i) {
+		*dst = *src;
+	}
+	return i;
 }

@@ -7,3 +7,4 @@ struct Student {
 	float score;
 	unsigned advisorID;
 };
+

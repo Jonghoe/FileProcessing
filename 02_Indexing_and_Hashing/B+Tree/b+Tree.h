@@ -1,11 +1,13 @@
+
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+
+#include "../Index_Hashing/HashTable.h"
 
 class BPlusTree;
 class Node;
 class InternalNode;
 class TerminalNode;
-
 
 class BPlusTree{
 protected:
@@ -15,22 +17,28 @@ public:
   BPlusTree();
 
   bool storeTree();
-  bool readTree();
+  bool loadTree();
   
-  bool insert(float score, int blckN);
+  bool insert(float score, int idIn);
+  TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   void print();
+  void printWithBlockNum(const HashTable& hashTable);
 };
 
 class Node {
  public:
+  Node();
+  int   allocatedBlockNumber;
+  static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
-  virtual Node* insert(float score, int blckN) = 0;
+  virtual Node* insert(float score, int idIn) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
   virtual void  print(int)  = 0;
+  virtual void  printWithBlockNum(int indent, const HashTable& hashTable) = 0;
 };
 
 
@@ -47,6 +55,8 @@ private:
   float scoreDeli[511];
 
 protected:
+  //const int allocatedBlockNumber;
+  
   InternalNode();
   bool  ifTerminal() {return false;}
   int   minVal() {return scoreDeli[0];}
@@ -58,10 +68,11 @@ protected:
   
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
   
 public:
-  void print(int);
+  void print(int indent);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 
@@ -71,18 +82,20 @@ class TerminalNode: public Node {
   
 private:
   const int size;
-
+  
   // contents of the block
   int storedRecordNumber;
   TerminalNode* nextTerminalNode;
   float scores[511];
-  int   blockNum[511]; // this should be changed into pointer
+  int   studID [511]; // this should be changed into studentNumber
 
   // functions to help Terminal::search()
   int  cntTillUpper(float scoreUpperBound);
   bool cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft);
   
 protected:
+  //const int allocatedBlockNumber;
+  
   TerminalNode();
   bool  ifTerminal() {return true;}
   int   minVal() {return scores[0];}
@@ -90,10 +103,11 @@ protected:
 
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
-  Node* insert(float score, int blckN);
+  Node* insert(float score, int idIn);
 
 public:
-  void print(int);
+  void print(int indent);
+  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
 
 #endif

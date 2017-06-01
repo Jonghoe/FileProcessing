@@ -4,8 +4,8 @@
 #ifndef BPLUSTREEINSERT_CPP
 #define BPLUSTREEINSERT_CPP
 
-bool BPlusTree::insert(float score, int blckN) {
-  Node* insertVal = rootNode->insert(score, blckN);
+bool BPlusTree::insert(float score, int idIn) {
+  Node* insertVal = rootNode->insert(score, idIn);
 
   // if no overflow
   if (insertVal == NULL)
@@ -25,22 +25,22 @@ bool BPlusTree::insert(float score, int blckN) {
   }
 }
 
-Node* InternalNode::insert(float score, int blckN) {
+Node* InternalNode::insert(float score, int idIn) {
   // 1. find where to insert
   int insertIndex = 0;
   //   (1) checking the last index
   if (maxVal() <= score) {
-    std::cout << "this is max - maxVal() :" << maxVal() << "score : " << score << std::endl;
+    //std::cout << "this is max - maxVal() :" << maxVal() << "score : " << score << std::endl;
     insertIndex = storedRecordNumber - 1;
   }
   //   (2) checking the first index
   else if (score < minVal()) {
-    std::cout << "this is min" << std::endl;
+    //std::cout << "this is min" << std::endl;
     insertIndex = 0;
   }
   //   (3) checking other indice
   else {
-    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
+    //std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
     for(int i = storedRecordNumber - 2; i >= 0; i--)
       if (scoreDeli[i] <= score) {
 	insertIndex = i+1;
@@ -48,9 +48,9 @@ Node* InternalNode::insert(float score, int blckN) {
       }
   }
 
-  std::cout << "Internal node - score : " << score << "\tblckN :" << blckN << "\tinsertIndex : " << insertIndex << std:: endl;
+  //  std::cout << "Internal node - score : " << score << "\tblckN :" << blckN << "\tinsertIndex : " << insertIndex << std:: endl;
   // 2. insert
-  Node* newVal = branchs[insertIndex]->insert(score, blckN);
+  Node* newVal = branchs[insertIndex]->insert(score, idIn);
   
   // 3. update Deli vals for inserted ones
   scoreDeli[insertIndex-1] = branchs[insertIndex]->minVal();
@@ -86,11 +86,11 @@ Node* InternalNode::insert(float score, int blckN) {
   }
 }  
 
-Node* TerminalNode::insert(float score, int blckN) {
+Node* TerminalNode::insert(float score, int idIn) {
   // base case : first insert in the node
   if (storedRecordNumber == 0) {
     scores[0] = score;
-    blockNum[0] = blckN;
+    studID[0] = idIn;
     
     storedRecordNumber++;
     return NULL;
@@ -136,7 +136,7 @@ Node* TerminalNode::insert(float score, int blckN) {
     //std::cout << "cpy: " << cpyRecordNum << "\tnew: " << newRecordNum << std::endl;
     for (int i = 0; i < cpyRecordNum; i++) {
       newNode->scores[i] = scores[i+newRecordNum];
-      newNode->blockNum[i] = blockNum[i+newRecordNum];
+      newNode->studID[i] = studID[i+newRecordNum];
     }
     
     // rearrange record numbers
@@ -151,16 +151,16 @@ Node* TerminalNode::insert(float score, int blckN) {
     if (insertIndex < storedRecordNumber) {
       for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
 	scores[i+1] = scores[i];
-	blockNum[i+1] = blockNum[i];
+	studID[i+1] = studID[i];
       }
       scores[insertIndex] = score;
-      blockNum[insertIndex] = blckN;
+      studID[insertIndex] = idIn;
     
       storedRecordNumber++;
     }
     else {
       //std::cout << "asfdasdfasdf" << nextTerminalNode << std::endl;
-      nextTerminalNode->insert(score, blckN);
+      nextTerminalNode->insert(score, idIn);
     }
 
     return nextTerminalNode;
@@ -168,10 +168,10 @@ Node* TerminalNode::insert(float score, int blckN) {
   else { // if no split, insert
     for (int i = storedRecordNumber - 1; insertIndex <= i ; i--) {
       scores[i+1] = scores[i];
-      blockNum[i+1] = blockNum[i];
+      studID[i+1] = studID[i];
     }
     scores[insertIndex] = score;
-    blockNum[insertIndex] = blckN;
+    studID[insertIndex] = idIn;
     
     storedRecordNumber++;
 
