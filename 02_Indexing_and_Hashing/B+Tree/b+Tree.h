@@ -1,3 +1,5 @@
+#include "../Index_Hashing/HashTable.h"
+
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
 
@@ -14,24 +16,28 @@ public:
   BPlusTree();
 
   bool storeTree();
-  bool readTree();
+  bool loadTree();
   
   bool insert(float score, int blckN);
+  TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(float scoreLowerBound);
   void print();
+  void printWithBlockNum(int*hashTable);
 };
 
 class Node {
  public:
-  //  virtual int   allocatedBlockNumber;
-  static int   blockNumCounter;
+  Node();
+  int   allocatedBlockNumber;
+  static  int   blockNumCounter;
   virtual bool  ifTerminal() = 0;
   virtual Node* searchFirstMatch(float scoreLowerBound) = 0;
   virtual Node* insert(float score, int blckN) = 0;
   virtual int   minVal() = 0;
   virtual int   maxVal() = 0;
   virtual void  print(int)  = 0;
+  virtual void  printWithBlockNum(int indent, int* hashTable) = 0;
 };
 
 
@@ -41,7 +47,6 @@ class InternalNode: public Node {
 private:
   const int branchSize; //512
   const int scoreSize;  //511
-  const int allocatedBlockNumber;
 
   // contents of the block
   int   storedRecordNumber;
@@ -49,6 +54,8 @@ private:
   float scoreDeli[511];
 
 protected:
+  //const int allocatedBlockNumber;
+  
   InternalNode();
   bool  ifTerminal() {return false;}
   int   minVal() {return scoreDeli[0];}
@@ -63,7 +70,8 @@ protected:
   Node* insert(float score, int blckN);
   
 public:
-  void print(int);
+  void print(int indent);
+  void printWithBlockNum(int indent, int* hashTable);
 };
 
 
@@ -73,7 +81,7 @@ class TerminalNode: public Node {
   
 private:
   const int size;
-  const int allocatedBlockNumber;
+  
 
   // contents of the block
   int storedRecordNumber;
@@ -86,6 +94,8 @@ private:
   bool cpyMatchRecords(int* blockNums, int startIndex, int cpyLeft);
   
 protected:
+  //const int allocatedBlockNumber;
+  
   TerminalNode();
   bool  ifTerminal() {return true;}
   int   minVal() {return scores[0];}
@@ -96,7 +106,8 @@ protected:
   Node* insert(float score, int blckN);
 
 public:
-  void print(int);
+  void print(int indent);
+  void printWithBlockNum(int indent, int* hashTable);
 };
 
 #endif

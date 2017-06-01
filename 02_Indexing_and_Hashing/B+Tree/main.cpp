@@ -1,6 +1,7 @@
 #include "b+Tree.cpp"
 #include "b+TreeSearch.cpp"
 #include "b+TreeInsert.cpp"
+#include "b+TreeIO.cpp"
 
 int main() {
   BPlusTree* tree = new BPlusTree();
@@ -17,6 +18,9 @@ int main() {
   //tree->insert(3.5, 1000);
   
   
-  tree->print();
+  tree->printWithBlockNum(NULL);
+
+  tree->findKthTerminal(11);
+  tree->findKthTerminal(12);
   return 0;
 }
