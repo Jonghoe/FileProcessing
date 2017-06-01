@@ -1,10 +1,10 @@
 #include "b+Tree.h"
 #include <iostream>
-//#define NULL 0
 
-BPlusTree::BPlusTree() : rootNode(new TerminalNode()) {}
-InternalNode::InternalNode() : branchSize(6), scoreSize(5), storedRecordNumber(0) {}
-TerminalNode::TerminalNode() : size(5), storedRecordNumber(0), nextTerminalNode(NULL) {}
+BPlusTree::BPlusTree() : rootNode(new TerminalNode())  {}
+int Node::blockNumCounter = 1000000000;
+InternalNode::InternalNode() : branchSize(6), scoreSize(5), storedRecordNumber(0), allocatedBlockNumber(blockNumCounter++) {}
+TerminalNode::TerminalNode() : size(5), storedRecordNumber(0), nextTerminalNode(NULL), allocatedBlockNumber(blockNumCounter++) {}
 
 //InternalNode::InternalNode() : branchSize(512), scoreSize(511), storedRecordNumber(0) {}
 //TerminalNode::TerminalNode() : size(511), storedRecordNumber(0), nextTerminalNode(NULL) {}
@@ -25,7 +25,7 @@ void InternalNode::print(int indent) {
   using namespace std;
 
   indentPrint(indent);
-  cout << "<<Internal Node>>" << endl;
+  cout << "<<Internal Node>> : " << allocatedBlockNumber << endl;
   indentPrint(indent);
   cout << "num of records : " << storedRecordNumber << endl;
   for (int i = 0; i < storedRecordNumber-1; i++) {
@@ -46,7 +46,7 @@ void TerminalNode::print(int indent) {
   using namespace std;
 
   indentPrint(indent);
-  cout << "Terminal Node" << endl;
+  cout << "<<Terminal Node>> : " << allocatedBlockNumber << endl;
   indentPrint(indent);
   cout << "num of records : " << storedRecordNumber << endl;
   for (int i = 0; i < storedRecordNumber; i++) {
