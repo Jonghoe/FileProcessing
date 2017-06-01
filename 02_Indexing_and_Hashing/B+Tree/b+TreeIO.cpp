@@ -20,6 +20,7 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
     findFirstNode->print(0); // this might be changed into printWithBlockNum
   else
     cout << "this is not in range" << endl;
+  return nullptr;
 }
 void printNode(Node* node, ofstream& ofs)
 {
@@ -29,9 +30,9 @@ void printNode(Node* node, ofstream& ofs)
 		tn = (TerminalNode*)node;
 	else
 		in = (InternalNode*)node;
-	ofs << bitset<32>(node->allocatedBlockNumber) << bitset<32>(in->);
+	//ofs << bitset<32>(node->allocatedBlockNumber) << bitset<32>(in->);
 	for(int i = 0; i<node->blockNumCounter; ++i) {
-
+		;
 	}
 }
 void findNode(Node* node, ofstream& ofs){
@@ -40,14 +41,14 @@ void findNode(Node* node, ofstream& ofs){
 }
 // store B+Tree into Students_score.idx
 bool BPlusTree::storeTree() {
-	((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
+	((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber;
 
-
+	return false;
 } // tngud's part (store the structure in a file)
 
 // load B+Tree from Students_score.idx
 bool BPlusTree::loadTree() {
-
+	return true;
 }  // tngus's part (read the structure from a file)
 
 
