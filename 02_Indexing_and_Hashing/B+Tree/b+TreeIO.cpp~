@@ -1,5 +1,0 @@
-#include "b+Tree.h"
-#include <iostream>
-
-Node* BPlusTree::findKthTerminal(int k) {
-}
