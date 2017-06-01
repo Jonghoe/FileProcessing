@@ -34,11 +34,6 @@ Student& Bucket::operator[](int idx)const
 	return records[idx];
 }
 
-void Bucket::save()
-{
-	
-}
-
 int Bucket::insert(Student & data)
 {
 	// size와 capacity가 같으면 오버플로우
