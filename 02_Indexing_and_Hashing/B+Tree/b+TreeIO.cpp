@@ -15,33 +15,31 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
 
   for(int i = 1; i < k && findFirstNode!=NULL ; i++)
     findFirstNode = findFirstNode->nextTerminalNode;
-
+  
   if (findFirstNode != NULL)
     findFirstNode->print(0); // this might be changed into printWithBlockNum
   else
     cout << "this is not in range" << endl;
   return nullptr;
 }
-void printNode(Node* node, ofstream& ofs)
-{
-	TerminalNode* tn;
-	InternalNode* in;
-	if(node->ifTerminal())
-		tn = (TerminalNode*)node;
-	else
-		in = (InternalNode*)node;
-	//ofs << bitset<32>(node->allocatedBlockNumber) << bitset<32>(in->);
-	for(int i = 0; i<node->blockNumCounter; ++i) {
-		;
+
+void BPlusTree::findNode(Node* node, ofstream& ofs){
+	if(node->ifTerminal()){
+		printNode<TerminalNode>(node,ofs);		
 	}
-}
-void findNode(Node* node, ofstream& ofs){
-	if(node->ifTerminal())
-		;
+	else {
+		InternalNode* in = (InternalNode*)node;
+		for(int i = 0; i<in->branchSize; ++i) {
+			findNode(in->branchs[i], ofs);
+		}
+		printNode<InternalNode>(node, ofs);
+	}
 }
 // store B+Tree into Students_score.idx
 bool BPlusTree::storeTree() {
-	((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber;
+	//((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
+	ofstream ofs("students_score.idx",ios::binary);
+	findNode(this->rootNode, ofs);
 
 	return false;
 } // tngud's part (store the structure in a file)

@@ -1,8 +1,8 @@
 
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+#include"../Index_Hashing//HashTable.h"
 
-#include "../Index_Hashing/HashTable.h"
 
 class BPlusTree;
 class Node;
@@ -12,7 +12,7 @@ class TerminalNode;
 class BPlusTree{
 protected:
   Node* rootNode;
-  
+  void findNode(Node* node, ofstream& ofs);
 public:
   BPlusTree();
 
