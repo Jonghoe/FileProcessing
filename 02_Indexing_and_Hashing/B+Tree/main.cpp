@@ -18,7 +18,7 @@ int main() {
   //tree->insert(3.5, 1000);
   
   
-  tree->print();
+  tree->printWithBlockNum(NULL);
 
   tree->findKthTerminal(11);
   tree->findKthTerminal(12);
