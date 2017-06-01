@@ -25,14 +25,31 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
 
 void BPlusTree::findNode(Node* node, ofstream& ofs){
 	if(node->ifTerminal()){
-		printNode<TerminalNode>(node,ofs);		
+		printNode((TerminalNode*)node,ofs);		
 	}
 	else {
 		InternalNode* in = (InternalNode*)node;
 		for(int i = 0; i<in->branchSize; ++i) {
 			findNode(in->branchs[i], ofs);
 		}
-		printNode<InternalNode>(node, ofs);
+		printNode((InternalNode*)node, ofs);
+	}
+}
+
+void BPlusTree::printNode(InternalNode * node, ofstream & ofs)
+{
+	InternalNode* tn = (InternalNode*)node;
+	ofs << bitset<32>(tn->allocatedBlockNumber) << bitset<32>(tn->branchSize);
+	for (int i = 0; i<tn->branchSize; ++i) {
+		ofs << bitset<32>(tn->branchs[i]->allocatedBlockNumber) << bitset<32>(tn->scoreDeli[i]);
+	}
+}
+void BPlusTree::printNode(TerminalNode * node, ofstream & ofs)
+{
+	TerminalNode* tn = (TerminalNode*)node;
+	ofs << bitset<32>(tn->allocatedBlockNumber) << bitset<32>(tn->size);
+	for (int i = 0; i<tn->size; ++i) {
+		ofs << bitset<32>(tn->scores[i]) << bitset<32>(tn->studID[i]);
 	}
 }
 // store B+Tree into Students_score.idx
