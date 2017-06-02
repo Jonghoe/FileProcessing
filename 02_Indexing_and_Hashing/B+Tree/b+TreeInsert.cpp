@@ -42,7 +42,7 @@ Node* InternalNode::insert(float score, int idIn) {
   //   (3) checking other indice
   else {
     //    std::cout << "this is middle - maxVal() :" << maxVal() << "\tminVal() : "<< minVal() << "\tscore : " << score << std::endl;
-    for(int i = i; i < storedRecordNumber; i++)
+    for(int i = 1; i < storedRecordNumber; i++)
       if (score <= scoreDeli[i]) {
 	insertIndex = i;
 	break;
