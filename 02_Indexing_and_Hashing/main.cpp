@@ -56,7 +56,7 @@ int main() {
     case RECORDS : 
 		printRecords();
 		cout << ".";
-		students = fm.readcsv();
+		
 		cout << ".";
 		if (tlb != NULL)
 			delete tlb;
@@ -66,10 +66,11 @@ int main() {
 			delete tree;
 		}
 		tree = new BPlusTree();
-		for (int i = 0; i < students.size(); ++i) {
-			tlb->insert(students[i]);
+		/*for (int i = 0; i < students.size(); ++i) {
+			tlb->insert(students[i]);			
 			tree->insert(students[i].score, students[i].studentID);
-		}
+		}*/
+		fm.readcsv(*tlb, *tree);
 		cout << ".";
 		fm.hashsave(*tlb);
 		cout << ".";

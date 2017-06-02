@@ -3,7 +3,7 @@
 #include<iostream>
 #include<bitset>
 #include"HashTable.h"
-
+#include"b+Tree.h"
 using namespace std;
 class FileManager {
 public:
@@ -92,14 +92,15 @@ public:
 		bks.pop_back();
 		return bks;
 	}
-	vector<Student> FileManager::readcsv()
+	vector<Student> FileManager::readcsv(HashTable& tlb, BPlusTree& tree)
 	{
-		vector<Student> students;
-		ifstream ifs("sampleData.csv");
-		int num;
+		ifstream ifs("SampleData_edited.csv");
+		int num,count=0;
 		char buffer[1024];
 		ifs >> num;
 		ifs.getline(buffer,1024);
+		vector<Student> students;
+		students.resize(3000);
 		for (int i = 0; i<num; ++i) {
 			ifs.getline(buffer, 1024);
 			char* buff = buffer;
@@ -125,11 +126,18 @@ public:
 			data = strtok(buff, ",");
 			stu.advisorID = atoi(data);
 
-			students.push_back(stu);
+			students[count]=stu;
+			++count;
+			if (count > 2999 || i == num - 1) {				
+				for (int s = 0; s < count; ++s) {
+					tlb.insert(students[s]);
+					tree.insert(students[s].score, students[s].studentID);
+				}
+				count = 0;
+				cout << i << endl;
+			}
 		}
-
 		ifs.close();
-
-		return students;
+		return vector<Student>();
 	}
 };

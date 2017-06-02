@@ -100,7 +100,7 @@ Node* TerminalNode::insert(float score, int idIn) {
   if (nextTerminalNode != NULL){
     // (1) this should be in the next node
     if ( nextTerminalNode->minVal() < score) {
-      std::cout << "go to next terminal not in right place" << std::endl;
+      //std::cout << "go to next terminal not in right place" << std::endl;
       return nextTerminalNode->insert(score, idIn);
     }
     // (2) will be overflowed but it's ok to be inserted next node
