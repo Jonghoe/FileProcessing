@@ -1,10 +1,11 @@
 #include "HashTable.h"
+#include"FileIOManager.h"
 #include<fstream>
 #include<iostream>
 HashTable::HashTable() :table(2), MASK(1), maxLevel(1),buckets(2)
 {
-	buckets.push_back(new Bucket());
-	buckets.push_back(new Bucket());
+	buckets[0]=(new Bucket());
+	buckets[1]=(new Bucket());
 	table[0] = 0;
 	table[1] = 1;
 }
@@ -54,6 +55,11 @@ void HashTable::insert(Student & record)
 		// ´Ù½Ã »ðÀÔ.
 		insert(record);
 	}	
+	/*else {
+		FileManager fm;
+		fm.hashsave(*this);
+		fm.DBsave(*this);
+	}*/
 }
 
 int HashTable::findHash(unsigned key)const
@@ -111,7 +117,9 @@ bool HashTable::check(unsigned key)const
 }
 
 HashTable::~HashTable()
-{	
+{
+	for (int i = 0; i < buckets.size(); ++i)
+		delete buckets[i];
 }
 void HashTable::modifyTable()
 {

@@ -17,10 +17,10 @@ TerminalNode* BPlusTree::findKthTerminal(int k) {
     findFirstNode = findFirstNode->nextTerminalNode;
   
   if (findFirstNode != NULL)
-    findFirstNode->print(0); // this might be changed into printWithBlockNum
-  else
-    cout << "this is not in range" << endl;
-  return nullptr;
+    return findFirstNode; // this might be changed into printWithBlockNum
+  else {
+	  return nullptr;
+  }
 }
 
 void BPlusTree::findNode(Node* node, ofstream& ofs){
@@ -29,7 +29,7 @@ void BPlusTree::findNode(Node* node, ofstream& ofs){
 	}
 	else {
 		InternalNode* in = (InternalNode*)node;
-		for(int i = 0; i<in->branchSize; ++i) {
+		for(int i = 0; i<in->storedRecordNumber; ++i) {
 			findNode(in->branchs[i], ofs);
 		}
 		printNode((InternalNode*)node, ofs);
@@ -39,25 +39,37 @@ void BPlusTree::findNode(Node* node, ofstream& ofs){
 void BPlusTree::printNode(InternalNode * node, ofstream & ofs)
 {
 	InternalNode* tn = (InternalNode*)node;
-	ofs << "I"<<bitset<32>(tn->allocatedBlockNumber) << bitset<32>(tn->storedRecordNumber);
-	for (int i = 0; i<tn->branchSize; ++i) {
-		ofs << bitset<32>(tn->branchs[i]->allocatedBlockNumber) << bitset<32>(tn->scoreDeli[i]);
+	ofs.write((char*)"I", 1);
+	ofs.write((char*)&tn->allocatedBlockNumber, 4);
+	ofs.write((char*)&tn->storedRecordNumber, 4);
+	for (int i = 0; i<tn->storedRecordNumber; ++i) {
+		ofs.write((char*)&tn->branchs[i]->allocatedBlockNumber, 4);
+		ofs.write((char*)&tn->scoreDeli[i], 4);
 	}
 }
 void BPlusTree::printNode(TerminalNode * node, ofstream & ofs)
 {
 	TerminalNode* tn = (TerminalNode*)node;
-	ofs << "T"<<bitset<32>(tn->allocatedBlockNumber) << bitset<32>(tn->storedRecordNumber);
-	for (int i = 0; i<tn->size; ++i) {
-		ofs << bitset<32>(tn->scores[i]) << bitset<32>(tn->studID[i]);
+	ofs.write((char*)"T", 1);
+	ofs.write((char*)&tn->allocatedBlockNumber, 4);
+	ofs.write((char*)&tn->storedRecordNumber, 4);
+	for (int i = 0; i<tn->storedRecordNumber; ++i) {
+		ofs.write((char*)&tn->scores[i], 4);
+		ofs.write((char*)&tn->studID[i], 4);
 	}
+	int A = 0;
+	if(tn->nextTerminalNode==NULL)
+		ofs.write((char*)&A, 4);
+	else
+		ofs.write((char*)&tn->nextTerminalNode->allocatedBlockNumber, 4);
 }
 // store B+Tree into Students_score.idx
 bool BPlusTree::storeTree() {
 	//((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
 	ofstream ofs("students_score.idx",ios::binary);
+	if (ofs.is_open()) { cout << "B"; }
 	findNode(this->rootNode, ofs);
-
+	ofs.close();
 	return false;
 } // tngud's part (store the structure in a file)
 
@@ -66,10 +78,16 @@ bool BPlusTree::loadTree() {
 	char c;
 	int size, bln;
 	ifstream ifs("students_score.idx", ios::binary);
+	InternalNode* nd;
 	vector<TerminalNode*> tns;
 	vector<InternalNode*> ins;
-	while(!ifs.eof()) {
-		ifs>>c>>bln>>size;
+	do{
+		c = ' ';
+		bln = 0;
+		size = 0;
+		ifs.read((char*)&c, 1);
+		ifs.read((char*)&bln, 4);
+		ifs.read((char*)&size, 4);
 		if(c=='T') {
 			TerminalNode* nd = new TerminalNode();
 			nd->allocatedBlockNumber = bln;
@@ -77,25 +95,35 @@ bool BPlusTree::loadTree() {
 
 			for(int i = 0; i<size;++i){
 				float score;
-				ifs>>score>>bln;
-				nd->scores[i] = score;
-				nd->studID[i] = bln;
+				ifs.read((char*)&score, 4);
+				ifs.read((char*)&bln, 4);
+
+				if (i != size) {
+					nd->scores[i] = score;
+					nd->studID[i] = bln;
+				}
 			}
+			ifs.read((char*)&bln, 4);
+			nd->nextTerminalNode = (TerminalNode*)bln;
 			tns.push_back(nd);
 		}
 		else {
-			InternalNode* nd = new InternalNode();
+			nd = new InternalNode();
 			nd->allocatedBlockNumber = bln;
 			nd->storedRecordNumber = size;
 			for(int i = 0; i<size; ++i) {
 				float deli;
-				ifs>>bln>>deli;
-				nd->scoreDeli[i] = deli;
-				nd->branchs[i] = (Node*)bln;
+				ifs.read((char*)&bln, 4);
+				ifs.read((char*)&deli, 4);
+				if(i!=size){
+					nd->scoreDeli[i] = deli;
+					nd->branchs[i] = (Node*)bln;
+				}
 			}
 			ins.push_back(nd);
 		}
-	}
+	} while (!ifs.eof());
+	ins.pop_back();
 	this->rootNode = ins.back();
 	ins.pop_back();
 	reCreateTree(rootNode,ins,tns);
@@ -105,7 +133,16 @@ bool BPlusTree::loadTree() {
 void BPlusTree::reCreateTree(Node* nd,vector<InternalNode*>& ins, vector<TerminalNode*> tns)
 {
 	if(nd->ifTerminal()) {
-		return;
+		TerminalNode* node = (TerminalNode*)nd;
+		int num = (int)node->nextTerminalNode;
+		if (num == 0)
+			node->nextTerminalNode = NULL;
+		else{
+			int j = 0;
+			for (; j < tns.size() && !(tns[j]->allocatedBlockNumber == num); ++j)
+				;
+			node->nextTerminalNode = tns[j];
+		}
 	}
 	else {
 		InternalNode* node = (InternalNode*)nd;
@@ -117,45 +154,29 @@ void BPlusTree::reCreateTree(Node* nd,vector<InternalNode*>& ins, vector<Termina
 			;
 		if(j<ins.size()) {
 			node->branchs[0] = ins[j];
-			InternalNode* tmp = ins.back();
-			tmp = ins[j];
-			ins[j] = tmp;
-			ins.pop_back();
 		}
 		else {
 			for(j=0; j<tns.size()&&!(tns[j]->allocatedBlockNumber==num); ++j)
 				;
 			if(j<tns.size()) {
 				node->branchs[0] = tns[j];
-				TerminalNode* tmp = tns.back();
-				tmp = tns[j];
-				tns[j] = tmp;
-				tns.pop_back();
 			}
 			terminal = true;
 		}
 		for(int i = 1; i<node->storedRecordNumber;++i){
 			int num = (int)node->branchs[i];
 			if(terminal){
-				for(j=0; j<ins.size()&&!(ins[j]->allocatedBlockNumber!=num); ++j)
-					;
-				node->branchs[i] = ins[j];
-				InternalNode* tmp=ins.back();
-				tmp = ins[j];
-				ins[j] = tmp;
-				ins.pop_back();
-			}
-			else {
-				for(j=0; j<tns.size()&&!(tns[j]->allocatedBlockNumber!=num); ++j)
+				for (j = 0; j<tns.size() && !(tns[j]->allocatedBlockNumber == num); ++j)
 					;
 				node->branchs[i] = tns[j];
-				TerminalNode* tmp = tns.back();
-				tmp = tns[j];
-				tns[j] = tmp;
-				tns.pop_back();
+			}
+			else {
+				for (j = 0; j<ins.size() && !(ins[j]->allocatedBlockNumber != num); ++j)
+					;
+				node->branchs[i] = ins[j];
 			}
 		}
-		for(int i = 0; i<node->branchSize; ++i) {
+		for(int i = 0; i<node->storedRecordNumber; ++i) {
 			reCreateTree(node->branchs[i], ins, tns);
 		}
 	}
