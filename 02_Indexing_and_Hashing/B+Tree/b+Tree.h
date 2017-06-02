@@ -111,7 +111,7 @@ protected:
   float maxVal() {return scores[storedRecordNumber-1];}
 
   bool deleteTree();
-
+  
   Node* searchFirstMatch(float scoreLowerBound);
   int*  search(float scoreLowerBound, float scoreUpperBound);
   Node* insert(float score, int idIn);

@@ -78,6 +78,10 @@ int main() {
 		tree->storeTree();
 		cout << "."<<endl;
 		cout << "Load complete" << endl;
+		/*for (int i = 0; i < students.size();++i){
+			if (!tlb->check(students[i].studentID))
+				cout << "H";
+		}*/
 		getch();
       break;
 	case RELEASE:
@@ -112,7 +116,7 @@ int main() {
 		tree->deleteTree();
 		tree->loadTree();
 		cout << "."<<endl;
-		cout << "Loading from Files complete";
+		cout << "Loading from Files complete";		
 		getch();
       break;
     case PRINTDB : 
@@ -142,6 +146,7 @@ int main() {
       cout << "Enter number k : ";
       cin >> k;
       tree->findKthTerminal(k)->print(0);
+	  
 	  table = fm.hashload();
 	  for (int i = 0; i < table.size(); ++i) {
 		  cout << "table IDX[" << i << "] = " << table[i] << endl;

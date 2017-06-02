@@ -96,11 +96,8 @@ bool BPlusTree::loadTree() {
 				float score;
 				ifs.read((char*)&score, 4);
 				ifs.read((char*)&bln, 4);
-
-				if (i != size) {
-					nd->scores[i] = score;
-					nd->studID[i] = bln;
-				}
+				nd->scores[i] = score;
+				nd->studID[i] = bln;
 			}
 			ifs.read((char*)&bln, 4);
 			nd->nextTerminalNode = (TerminalNode*)bln;
@@ -219,6 +216,7 @@ void TerminalNode::print(int indent) {
     cout << "studID[" << i << "] : " << studID[i] << endl;
   }
   cout << endl;
+  cout << "next BlockNumber: " << nextTerminalNode->allocatedBlockNumber << endl;
 }
 
 
