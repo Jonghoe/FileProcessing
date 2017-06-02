@@ -2,6 +2,7 @@
 #include"CommonData.h"
 
 class Bucket {
+	
 protected:
 	static int nextBlkNum;
 	const int capacity;
@@ -10,6 +11,7 @@ protected:
 	Student* records;
 	int blkNum;
 public:
+	static void resetNextBlkNum() { nextBlkNum = 0; }
 	Bucket(int l);
 	Bucket();
 	int getBlkNum() {

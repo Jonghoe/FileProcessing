@@ -67,7 +67,6 @@ void BPlusTree::printNode(TerminalNode * node, ofstream & ofs)
 bool BPlusTree::storeTree() {
 	//((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
 	ofstream ofs("students_score.idx",ios::binary);
-	if (ofs.is_open()) { cout << "B"; }
 	findNode(this->rootNode, ofs);
 	ofs.close();
 	return false;

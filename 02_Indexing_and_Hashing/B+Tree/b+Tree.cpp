@@ -14,6 +14,7 @@ bool BPlusTree::deleteTree() {
   rootNode->deleteTree();
   delete[] rootNode;
   //  rootNode = new TerminalNode();
+  return true;
 }
 
 bool InternalNode::deleteTree() {
@@ -21,6 +22,7 @@ bool InternalNode::deleteTree() {
     branchs[i]->deleteTree();
     delete[] branchs[i];
   }
+  return true;
 }
 
 bool TerminalNode::deleteTree() {

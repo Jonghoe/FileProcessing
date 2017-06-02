@@ -27,7 +27,7 @@ void printMenu() {
 }
 void printRecords()
 {
-	cout << "Read datas from student.csv......" << endl;
+	cout << "Read datas from student.csv" ;
 }
 void printDB()
 {
@@ -36,14 +36,14 @@ void printDB()
 void printReadFiles()
 {
 	cout << "Read datas from student.csv, Students.hash, Students_score.idx, Students.DB" << endl;
-	cout << "and make a b+tree, hashTable" << endl;
+	cout << "and make a b+tree, hashTable";
 }
 int main() {
 
   int selected = 0, k;
   BPlusTree* tree = new BPlusTree();
   FileManager fm;
-  HashTable tlb;
+  HashTable* tlb = new HashTable();
   vector<Student> students;
   vector<Bucket*> buckets;
   vector<int> table;
@@ -55,36 +55,70 @@ int main() {
 	switch (selected){
     case RECORDS : 
 		printRecords();
+		cout << ".";
 		students = fm.readcsv();
+		cout << ".";
+		if (tlb != NULL)
+			delete tlb;
+		tlb = new HashTable();
+		if (tree != NULL) {
+			tree->deleteTree();
+			delete tree;
+		}
+		tree = new BPlusTree();
 		for (int i = 0; i < students.size(); ++i) {
-			tlb.insert(students[i]);
+			tlb->insert(students[i]);
 			tree->insert(students[i].score, students[i].studentID);
 		}
-		//tlb.printTable();
-		//tree->print();
-		fm.hashsave(tlb);
-		fm.DBsave(tlb);
+		cout << ".";
+		fm.hashsave(*tlb);
+		cout << ".";
+		fm.DBsave(*tlb);
+		cout << ".";
 		tree->storeTree();
+		cout << "."<<endl;
+		cout << "Load complete" << endl;
 		getch();
       break;
 	case RELEASE:
 		cout << "Release Data";
-		delete tree;
+		tree->deleteTree();
+		cout << ".";
+		if(tree!=NULL)
+			delete tree;
+		tree = NULL;
+		cout << ".";
 		tree = new BPlusTree();
-		tlb.~HashTable();
-		tlb = HashTable();
+		cout << ".";
+		if(tlb!=NULL)
+			delete tlb;
+		tlb = NULL;
+		cout << ".";
+		tlb = new HashTable();
+		cout << "."<<endl;
+		cout << "Release complete" << endl;
+		getch();
 		break;
     case FILES : 
 		printReadFiles();
+		cout << ".";
 		buckets = fm.bucketload();
+		cout << ".";
 		table = fm.hashload();
-		tlb = HashTable(table, buckets);
+		cout << ".";
+		delete tlb;
+		tlb = new HashTable(table, buckets);
+		cout << ".";
+		tree->deleteTree();
 		tree->loadTree();
-		tree->print();
+		cout << "."<<endl;
+		cout << "Loading from Files complete";
+		getch();
       break;
     case PRINTDB : 
 		buckets = fm.bucketload();
 		for (int i = 0; i < buckets.size(); ++i) {
+			cout << "Bucekt Num: " << buckets[i]->getBlkNum() << ", Bit Level: " << buckets[i]->getLevel() << endl;
 			for (int j = 0; j < buckets[i]->getSize(); ++j){
 				char name[21];
 				int k = MyStrCpy(name, (*buckets[i])[j].name);
@@ -92,25 +126,9 @@ int main() {
 					name[k] = '\0';
 				else
 					name[20] = '\0';
-				cout << "name: " << name << ", " << (*buckets[i])[j].score << ", " << (*buckets[i])[j].studentID << endl;
+				cout << "name: " << name << ",\tscore: " << (*buckets[i])[j].score << ",\tstudent ID: " << (*buckets[i])[j].studentID <<",\tadvID: "<< (*buckets[i])[j].advisorID<<endl;
 			}
 		}
-		/*printDB();
-		buckets = fm.bucketload();
-		for (int i = 0; i < buckets.size(); ++i) {
-			Bucket& bucket = *buckets[i];
-			cout << "============================================================================" << endl;
-			cout << "|| Block Num: ";
-			cout.width(5);
-			cout.fill(' ');
-			cout << bucket.getBlkNum() << " || " << " bitLevel: ";
-			cout.width(3);
-			cout.fill(' '); 
-			cout << bucket.getLevel() << " ||" << endl;
-			cout << "||        name         ||     studentID    ||  score  ||     studentID    ||" << endl;
-			for (int j = 0; j < bucket.getSize(); ++j) {
-				;
-			}*/
 		getch();
       break;
     case PRINTHASH : ;
@@ -141,5 +159,7 @@ int main() {
     }
 	system("cls");
   }
+  if(tree!=NULL)
+	tree->deleteTree();
   return 0;
 }

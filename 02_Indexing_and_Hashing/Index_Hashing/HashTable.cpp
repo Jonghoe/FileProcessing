@@ -118,6 +118,7 @@ bool HashTable::check(unsigned key)const
 
 HashTable::~HashTable()
 {
+	Bucket::resetNextBlkNum();
 	for (int i = 0; i < buckets.size(); ++i)
 		delete buckets[i];
 }
