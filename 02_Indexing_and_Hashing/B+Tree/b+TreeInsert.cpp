@@ -54,7 +54,7 @@ Node* InternalNode::insert(float score, int idIn) {
   Node* newVal = branchs[insertIndex]->insert(score, idIn);
   
   // 3. update Deli vals for inserted ones
-  if (score > minVal())
+  if (insertIndex != 0)
     scoreDeli[insertIndex-1] = branchs[insertIndex]->minVal();
 
   // 4. if no new child node
