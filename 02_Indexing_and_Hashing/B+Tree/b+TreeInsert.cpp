@@ -91,8 +91,7 @@ Node* TerminalNode::insert(float score, int idIn) {
   // base case : first insert in the node
   if (storedRecordNumber == 0) {
     scores[0] = score;
-    studID[0] = idIn;
-    
+    studID[0] = idIn;    
     storedRecordNumber++;
     return NULL;
   }
