@@ -1,3 +1,6 @@
+#include"StudentBucket.h"
+#include"ProfcessorBucket.h"
+
 #include "HashTable.h"
 #include "FileIOManager.h"
 #include<algorithm>
@@ -5,7 +8,7 @@
 #include<iostream>
 
 
-HashTable::HashTable() :table(2), MASK(1), maxLevel(1), buckets(), out(ofstream("Students.DB",ios::binary)), in(ifstream("Students.DB", ios::binary))
+HashTable::HashTable(BucketFactory::Type t) :type(t),table(2), MASK(1), maxLevel(1), buckets()
 {
 	createBucket(0);
 	createBucket(1);
@@ -14,7 +17,7 @@ HashTable::HashTable() :table(2), MASK(1), maxLevel(1), buckets(), out(ofstream(
 }
 
 
-HashTable::HashTable(const vector<int>& tb, const vector<Bucket*>& b) : out(ofstream("Students.DB")), in(ifstream("Students.DB"))
+HashTable::HashTable(BucketFactory::Type t,const vector<int>& tb, const vector<Bucket*>& b) :type(t)
 {
 	table = tb;
 	maxLevel = 0;
@@ -38,10 +41,20 @@ bool HashTable::modifyBlock(int blk)
 	// 메모리에서 빼기전에 저장
 	if (buckets.size() >= 500){		
 		FileManager fm;
-		fm.bucketSave(*buckets.back(), out);
+		if (type == BucketFactory::Type::student) {
+			StudentBucket* sBuck = (StudentBucket*)buckets.back();
+			fm.bucketSave(*sBuck, sBuck->getOut());
+		}
+		
 		buckets.pop_back();
 	}
-	Bucket* newBlk = fm.bucketLoad(blk, in);
+	Bucket* newBlk;
+	if (type == BucketFactory::Type::student) {
+		fm.bucketLoad((StudentBucket*)newBlk, blk, newBlk->getIn());
+	}
+	else if (type == BucketFactory::Type::professor) {
+		fm.bucketLoad((ProfessorBucket*)newBlk, blk, newBlk->getIn());
+	}
 	if (newBlk != nullptr) {
 		buckets.push_back(newBlk);
 		return true;
@@ -51,20 +64,26 @@ bool HashTable::modifyBlock(int blk)
 	}
 }
 
-
-void HashTable::createBucket(int blk)
+void HashTable::bucketSave()
 {
 	FileManager fm;
-	buckets.push_back(new Bucket());
-	fm.bucketSave(*buckets.front(), out);
+	if (type == BucketFactory::Type::student)
+		fm.bucketSave(*(StudentBucket*)buckets.front(), buckets.front()->getOut());
+	else if (type == BucketFactory::Type::professor)
+		fm.bucketSave(*(ProfessorBucket*)buckets.front(), buckets.front()->getOut());
+}
+void HashTable::createBucket(int blk)
+{
+	buckets.push_back(BucketFactory::createBucket(type));
+	bucketSave();
 }
 
 
 void HashTable::createBucket(int blk,int level)
 {
 	FileManager fm;
-	buckets.push_back(new Bucket(level));
-	fm.bucketSave(*buckets.front(), out);
+	buckets.push_back(BucketFactory::createBucket(type,level));
+	bucketSave();
 }
 
 
@@ -102,7 +121,7 @@ void HashTable::insert(Student& record)
 	// hash값을 이용하여 bucket Num을 찾는다
 	int blkNum = table[hash];
 	// 입력때 오버플로우 발생 시 err 는 -1이 됨
-	int err = getBlock(blkNum)->insert(record);	
+	int err = getBlock(blkNum)->insert(&record);	
 	if (err == -1 ) {
 		// 오버플로우난 bucket의 레벨에 맞게금 mask와 hash 조정
 		int fitMask = (1 << (getBlock(blkNum)->getLevel() - 1)) - 1;
@@ -137,25 +156,15 @@ int HashTable::findHash(unsigned key)const
 
 void HashTable::printTable()const
 {
+	if (type == BucketFactory::Type::student)
+		cout << "Student Table" << endl;
+	else if(type == BucketFactory::Type::professor)
+		cout << "Professor Table" << endl;
 	for (unsigned i = 0; i < table.size(); ++i) {
 		cout << "Idx[" << i << "] ="<<table[i]<<endl;		
 	}	
 }
 
-void HashTable::printBuckets()const
-{
-	for (unsigned i = 0; i < buckets.size(); ++i) {
-		cout << "==================buckets[" << i << ", " << getBlock(i)->getLevel()<< " ]=================" << endl;
-		for (int j = 0; j < getBlock(i)->getSize(); ++j) {
-			char name[21];
-			int k = MyStrCpy(name, (*getBlock(i))[j].name);
-			if (k > 20)
-				k = 20;
-			name[k] = '\0';
-			cout << "stu: " << name << " ID: " << (*getBlock(i))[j].studentID << endl;
-		}
-	}
-}
 
 
 const vector<Bucket*>& HashTable::getBucket()const
@@ -181,8 +190,11 @@ bool HashTable::check(unsigned key)const
 	int hash = findHash(key);
 	int blkNum = table[hash];
 	for (int i = 0; i < getBlock(blkNum)->getSize(); ++i) {
-		if((*getBlock(blkNum))[i].studentID==key){
-			return true;
+		if(type==BucketFactory::student){
+			StudentBucket* sBucket = (StudentBucket*)getBlock(blkNum);
+			if((*sBucket)[i].studentID ==key){
+				return true;
+			}
 		}
 	}
 	return false;
@@ -227,17 +239,36 @@ void HashTable::move(int first, int second)
 {
 	int src = table[first];
 	int dst = table[second];
-	Bucket& a = *getBlock(src);
-	Bucket& b = *getBlock(dst);
-	int i = 0;
-	while( i < a.getSize()) {
-		int localKey = a[i].studentID&( (1 << a.getLevel()) - 1);
-		if (localKey == second) {
-			b.insert(a[i]);
-			a.erase(i);
+	if (type==BucketFactory::Type::student){
+		int i = 0;
+		StudentBucket& a = *(StudentBucket*)getBlock(src);
+		StudentBucket& b = *(StudentBucket*)getBlock(dst);
+
+		while( i < a.getSize()) {
+			int localKey = a[i].studentID&( (1 << a.getLevel()) - 1);
+			if (localKey == second) {
+				b.insert(&a[i]);
+				a.erase(i);
+			}
+			else {
+				++i;
+			}
 		}
-		else {
-			++i;
+	}
+	else if (type == BucketFactory::Type::professor) {
+		int i = 0;
+		ProfessorBucket& a = *(ProfessorBucket*)getBlock(src);
+		ProfessorBucket& b = *(ProfessorBucket*)getBlock(dst);
+
+		while (i < a.getSize()) {
+			int localKey = a[i].ProfID&((1 << a.getLevel()) - 1);
+			if (localKey == second) {
+				b.insert(&a[i]);
+				a.erase(i);
+			}
+			else {
+				++i;
+			}
 		}
 	}
 }

@@ -30,6 +30,11 @@ int Bucket::getSize()const
 	return size;
 }
 
+int Bucket::getCapacity() const
+{
+	return capacity;
+}
+
 Student& Bucket::operator[](int idx)const
 {
 	return records[idx];

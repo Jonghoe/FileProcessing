@@ -3,11 +3,10 @@
 #include "ProfcessorBucket.h"
 #pragma once
 
-Bucket * BucketFactory::createBucket(Type t)
+Bucket * BucketFactory::createBucket(Type t,int level)
 {
-	if (t == Student)
-		return new StudentBucket();
-	else if (t == Profcessor)
-		return new ProfessorBucket();
-	
+	if (t == student)
+		return new StudentBucket(level);
+	else if (t == professor)
+		return new ProfessorBucket(level);
 }

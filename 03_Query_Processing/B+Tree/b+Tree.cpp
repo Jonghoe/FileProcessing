@@ -1,4 +1,3 @@
-#pragma once
 #include "b+Tree.h"
 #include <iostream>
 

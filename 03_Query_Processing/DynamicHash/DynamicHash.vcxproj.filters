@@ -18,9 +18,6 @@
     <ClInclude Include="..\B+Tree\b+Tree.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Bucket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="FileIOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -30,11 +27,20 @@
     <ClInclude Include="HashTable.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="StudentBucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Bucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BucketFactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfcessorBucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Bucket.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="FileIOmanager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -50,10 +56,22 @@
     <ClCompile Include="..\B+Tree\b+TreeInsert.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\B+Tree\b+TreeIO.cpp">
+    <ClCompile Include="..\B+Tree\b+TreeSearch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\B+Tree\b+TreeSearch.cpp">
+    <ClCompile Include="StudentBucket.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BucketFactory.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfcessorBucket.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\02_Indexing_and_Hashing\B+Tree\b+TreeIO2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Bucket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

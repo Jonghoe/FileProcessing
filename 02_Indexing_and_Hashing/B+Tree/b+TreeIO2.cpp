@@ -96,7 +96,7 @@ void TerminalNode::printWithBlockNum(int indent, const HashTable& hashTable) {
 }
 */
 
-int readStudent(BPlusTree* tree) {
+void readStudent(BPlusTree* tree) {
   int studNum;
   
   char nameTemp[21];

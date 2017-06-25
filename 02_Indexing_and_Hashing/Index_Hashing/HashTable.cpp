@@ -54,12 +54,7 @@ void HashTable::insert(Student & record)
 		move(fitHash, half);
 		// ´Ù½Ã »ğÀÔ.
 		insert(record);
-	}	
-	/*else {
-		FileManager fm;
-		fm.hashsave(*this);
-		fm.DBsave(*this);
-	}*/
+	}
 }
 
 int HashTable::findHash(unsigned key)const
