@@ -1,14 +1,14 @@
 #pragma once
 #include"Bucket.h"
+#include"CommonData.h"
 class ProfessorBucket :public Bucket{
 protected:
 	const int capacity;
 	int level;
 	int size;
-	Student* records;
+	Professor* records;
 	int blkNum;
 public:
-
 	ProfessorBucket(int l);
 	ProfessorBucket();
 	int getBlkNum() const
@@ -16,12 +16,12 @@ public:
 		return blkNum;
 	}
 	//position의 record를 삭제 및 반환
-	Student erase(int position);
+	Professor erase(int position);
 	int getLevel()const;
 	// data를 array 마지막에 삽입 size를 넘어가면 -1 반환
-	int insert(Student& data);
+	int insert(void* data);
 	int getSize()const;
 	int getCapacity()const;
-	Student& operator[](int idx)const;
+	Professor& operator[](int idx)const { return records[idx]; };
 
 };

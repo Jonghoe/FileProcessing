@@ -1,4 +1,5 @@
 #include"FileIOManager.h"
+#include"StudentBucket.h"
 #include<cassert>
 #include<direct.h>
 
@@ -7,7 +8,7 @@ void FileManager::hashsave(const HashTable& tlb)
 	const vector<int>& tb = tlb.getTable();
 	string hashPath = "Students.hash";
 	ofstream writeHash(hashPath.data(), ios::binary);	
-	for (int i = 0; i < tb.size(); ++i) {
+	for (unsigned i = 0; i < tb.size(); ++i) {
 		writeHash.write(reinterpret_cast<char*>(&i), 4);
 		writeHash.write(reinterpret_cast<const char*>(&tb[i]), 4);
 	}
@@ -27,18 +28,13 @@ vector<int> FileManager::hashload()
 	ht.pop_back();
 	return ht;
 }
-// 디비 저장
-void FileManager::DBsave(HashTable& tlb)
+
+Bucket* FileManager::bucketSave(const ProfessorBucket& bk, ofstream& wDB)
 {
-	vector<Bucket*> buck = tlb.getBucket();
-	string filePath = "Student.DB";
-	ofstream writeFile(filePath.data(), ios::binary);
-	for (auto it = buck.begin(); it != buck.end(); ++it) {
-		bucketSave(**it,tlb.getDBOStream());
-	}
-	writeFile.close();
+	return nullptr;
 }
-Bucket* FileManager::bucketSave(const Bucket& bk,ofstream& wDB)
+
+Bucket* FileManager::bucketSave(const StudentBucket& bk,ofstream& wDB)
 {
 	// 원하는 위치로 이동 (블럭으로 이동)	
 	wDB.seekp(bk.getBlkNum()*BLOCK_SIZE);
@@ -69,21 +65,25 @@ Bucket* FileManager::bucketSave(const Bucket& bk,ofstream& wDB)
 		wDB.write(reinterpret_cast<char*>(buffer), 4);
 	}
 }
-Bucket* FileManager::bucketLoad(int blk,ifstream &rDB)
+void FileManager::bucketLoad(ProfessorBucket* bk, int blk, ifstream &rDB)
 {
-	Bucket* bk = new Bucket();
+
+}
+void FileManager::bucketLoad(StudentBucket* bk,int blk,ifstream &rDB)
+{
+	bk = new StudentBucket();
 	int t_aid, t_sid,level,size,blkNum;
 	float t_score;
 	char t_n[20];
 	// 원하는 위치로 이동 (블럭으로 이동)
 	rDB.seekg(blk*BLOCK_SIZE);
 	if (rDB.fail())
-		return nullptr;
+		bk = nullptr;
 	rDB.read(reinterpret_cast<char*>(&blkNum), 4);
 	rDB.read(reinterpret_cast<char*>(&size), 4);
 	rDB.read(reinterpret_cast<char*>(&level), 4);
 	if (rDB.fail())
-		return nullptr;
+		bk = nullptr;
 	assert(blk == blkNum);
 	for(int i=0;i<size;++i){
 		rDB.read(reinterpret_cast<char*>(&t_aid), 4);
@@ -97,26 +97,10 @@ Bucket* FileManager::bucketLoad(int blk,ifstream &rDB)
 			stu.name[len] = '\0';
 		stu.score = t_score;
 		stu.studentID = t_sid;
-		bk->insert(stu);
+		bk->insert(&stu);
 	}
-	return bk;
 }
-vector<Bucket*> FileManager::bucketload()
-{
-	unsigned t_bln, t_size, t_l, t_aid, t_sid;
-	float t_score;
-	char t_n[21];
-	vector<Bucket*> bks;
-	int i = 0;
-	Bucket* bk = nullptr;
-	while ((bk=bucketLoad(i, ifstream("Student.DB", ios::binary))) != nullptr){
-		if (bk != nullptr){
-			bks.push_back(bk);
-			++i;
-		}
-	}	
-	return bks;
-}
+
 vector<Student> FileManager::readStudent(HashTable& tlb, BPlusTree& tree)
 {
 	ifstream ifs("SampleData_edited.csv");
@@ -158,7 +142,7 @@ vector<Student> FileManager::readStudent(HashTable& tlb, BPlusTree& tree)
 	return students;
 }
 
-vector<Student> FileManager::readProfessor(HashTable & tlb, BPlusTree & tree)
+vector<Professor> FileManager::readProfessor(HashTable & tlb, BPlusTree & tree)
 {
-	return vector<Student>();
+	return vector<Professor>();
 }

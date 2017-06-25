@@ -143,16 +143,22 @@
   <ItemGroup>
     <ClInclude Include="..\B+Tree\b+Tree.h" />
     <ClInclude Include="Bucket.h" />
+    <ClInclude Include="BucketFactory.h" />
+    <ClInclude Include="ProfcessorBucket.h" />
+    <ClInclude Include="StudentBucket.h" />
     <ClInclude Include="CommonData.h" />
     <ClInclude Include="FileIOManager.h" />
     <ClInclude Include="HashTable.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\02_Indexing_and_Hashing\B+Tree\b+TreeIO2.cpp" />
     <ClCompile Include="..\B+Tree\b+Tree.cpp" />
     <ClCompile Include="..\B+Tree\b+TreeInsert.cpp" />
-    <ClCompile Include="..\B+Tree\b+TreeIO.cpp" />
     <ClCompile Include="..\B+Tree\b+TreeSearch.cpp" />
     <ClCompile Include="Bucket.cpp" />
+    <ClCompile Include="BucketFactory.cpp" />
+    <ClCompile Include="ProfcessorBucket.cpp" />
+    <ClCompile Include="StudentBucket.cpp" />
     <ClCompile Include="FileIOmanager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="main.cpp" />

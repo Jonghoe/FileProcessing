@@ -3,26 +3,24 @@
 #include<fstream>
 #include"Bucket.h"
 #include"CommonData.h"
+#include"BucketFactory.h"
 using namespace std;
 class HashTable {
 protected:
+	BucketFactory::Type type;
 	int MASK;
 	int maxLevel;
 	vector<int> table;	
 	vector<Bucket*> buckets;
-	mutable ofstream out;
-	mutable ifstream in;
 public:
-	HashTable();
-	HashTable(const vector<int>& tb, const vector<Bucket*>& b);	
+	HashTable(BucketFactory::Type t );
+	HashTable(BucketFactory::Type t,const vector<int>& tb, const vector<Bucket*>& b);
 	void insert(Student& record);
 	int findHash(unsigned key)const;
 	void printTable()const;
-	void printBuckets()const;
 	const vector<Bucket*>& getBucket()const;
 	const vector<int>& getTable()const;
 	unsigned getBlkNum(int key)const;
-	ofstream& getDBOStream() { return out; }
 	
 	// 키값이 유요한지 확인
 	bool check(unsigned key)const;
@@ -55,6 +53,7 @@ private:
 	bool modifyBlock(int blk);
 	void createBucket(int blk);
 	void createBucket(int blk, int level);
+	void bucketSave();
 };
 
 int MyStrCpy(char* dst, const char* src);

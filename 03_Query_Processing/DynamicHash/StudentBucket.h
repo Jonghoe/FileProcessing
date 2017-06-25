@@ -9,7 +9,7 @@ protected:
 	Student* records;
 	int blkNum;
 public:
-	static void resetNextBlkNum() { nextBlkNum = 0; }
+	
 	StudentBucket(int l);
 	StudentBucket();
 	int getBlkNum() const{
@@ -19,9 +19,8 @@ public:
 	Student erase(int position);
 	int getLevel()const;
 	// data를 array 마지막에 삽입 size를 넘어가면 -1 반환
-	int insert(Student& data);
+	int insert(void* data);
 	int getSize()const;
 	int getCapacity()const;
-	Student& operator[](int idx)const;
-	
+	Student& operator[](int idx)const { return records[idx]; };
 };
