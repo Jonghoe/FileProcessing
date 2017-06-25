@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\B+Tree\b+Tree.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="FileIOManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -39,7 +36,10 @@
     <ClInclude Include="ProfcessorBucket.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Join.h">
+    <ClInclude Include="..\B+Tree\b+Tree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryProcessing.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,15 +53,6 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\B+Tree\b+Tree.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\B+Tree\b+TreeInsert.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\B+Tree\b+TreeSearch.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="StudentBucket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -71,13 +62,25 @@
     <ClCompile Include="ProfcessorBucket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\02_Indexing_and_Hashing\B+Tree\b+TreeIO2.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Bucket.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="sample.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\B+Tree\b+Tree.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\B+Tree\b+TreeInsert.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\B+Tree\b+TreeIO2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\B+Tree\b+TreeSearch.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\B+Tree\b+TreeIO.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

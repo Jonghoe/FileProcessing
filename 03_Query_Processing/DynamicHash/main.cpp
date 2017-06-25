@@ -91,7 +91,7 @@ int main()
 			fm.hashsave(*professorTable);
 			cout << "clear" << endl;
 			cout << ".";
-			fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
+				fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
 			fm.DBsave<ProfessorBucket>(*professorTable,"Professors.DB");
 			cout << ".";
 			//studentTree->storeTree();

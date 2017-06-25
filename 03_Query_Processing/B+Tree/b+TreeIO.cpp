@@ -63,9 +63,13 @@ void BPlusTree::printNode(TerminalNode * node, ofstream & ofs)
 		ofs.write((char*)&tn->nextTerminalNode->allocatedBlockNumber, 4);
 }
 // store B+Tree into Students_score.idx
-bool BPlusTree::storeTree() {
+bool BPlusTree::storeTree(int flag) {
 	//((InternalNode*)this->rootNode)->branchs[0]->allocatedBlockNumber
-	ofstream ofs("students_score.idx",ios::binary);
+	ofstream ofs;
+	if(flag==0)
+		ofs=ofstream("students_score.idx",ios::binary);
+	else
+		ofs= ofstream("Professor_Salary.idx", ios::binary);
 	findNode(this->rootNode, ofs);
 	ofs.close();
 	return false;

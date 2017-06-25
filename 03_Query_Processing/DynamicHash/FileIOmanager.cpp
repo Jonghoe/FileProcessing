@@ -14,7 +14,7 @@ void FileManager::hashsave(const HashTable& tlb)
 	}
 	ofstream writeHash(hashPath.data(), ios::binary);	
 	for (unsigned i = 0; i < tb.size(); ++i) {
-		writeHash.write(reinterpret_cast<char*>(&i), 4);
+		writeHash.write((char*)(&i), 4);
 		writeHash.write(reinterpret_cast<const char*>(&tb[i]), 4);
 	}
 	writeHash.close();
@@ -32,8 +32,8 @@ vector<int> FileManager::hashload(BucketFactory::Type type)
 	}
 	ifstream hashl(hashPath.data(), ios::binary);
 	do{
-		hashl.read(reinterpret_cast<char*>(&i), 4);
-		hashl.read(reinterpret_cast<char*>(&temp),4);
+		hashl.read((char*)(&i), 4);
+		hashl.read((char*)(&temp),4);
 		ht.push_back(temp);
 	} while (!hashl.eof());
 	ht.pop_back();
@@ -49,25 +49,24 @@ Bucket* FileManager::bucketSave(const ProfessorBucket& bk, ofstream& wDB)
 	int size = bk.getSize();
 	int level = bk.getLevel();
 
-	wDB.write(reinterpret_cast<char*>(&blkNum), 4);
-	wDB.write(reinterpret_cast<char*>(&size), 4);
-	wDB.write(reinterpret_cast<char*>(&level), 4);
+	wDB.write((char*)(&blkNum), 4);
+	wDB.write((char*)(&size), 4);
+	wDB.write((char*)(&level), 4);
 	for (int j = 0; j<bk.getSize(); ++j) {
 		int aid = bk[j].ProfID;
 		int salary= bk[j].Salary;
-		wDB.write(reinterpret_cast<char*>(&aid), 4);
+		wDB.write((char*)(&aid), 4);
 		wDB.write(bk[j].name, 20);
-		wDB.write(reinterpret_cast<char*>(&salary), 4);
+		wDB.write((char*)(&salary), 4);
 	}
 	// 블럭의 크기 만큼 데이터 빈공간 채우기.
 	int buffer[6] = { 0,0,0,0,0,0 };
 	for (int j = 0; j < bk.getCapacity() - bk.getSize(); ++j) {
-		wDB.write(reinterpret_cast<char*>(buffer), 4);
-		wDB.write(reinterpret_cast<char*>(buffer), 20);
-		wDB.write(reinterpret_cast<char*>(buffer), 4);
+		wDB.write((char*)(buffer), 4);
+		wDB.write((char*)(buffer), 20);
+		wDB.write((char*)(buffer), 4);
 	}
-	wDB.write(reinterpret_cast<char*>(buffer), 24);
-	cout << wDB.tellp() << endl;
+	wDB.write((char*)(buffer), 24);
 }
 
 Bucket* FileManager::bucketSave(const StudentBucket& bk,ofstream& wDB)
@@ -80,28 +79,51 @@ Bucket* FileManager::bucketSave(const StudentBucket& bk,ofstream& wDB)
 	int blkNum = bk.getBlkNum();
 	int size = bk.getSize();
 	int level = bk.getLevel();
+	if (check)
+		cout << wDB.tellp() << endl;
 
-	wDB.write(reinterpret_cast<char*>(&blkNum), 4);
-	wDB.write(reinterpret_cast<char*>(&size), 4);
-	wDB.write(reinterpret_cast<char*>(&level), 4);
+	wDB.write((char*)(&blkNum), 4);
+	wDB.write((char*)(&size), 4);
+	wDB.write((char*)(&level), 4);
 	for (int j = 0; j<bk.getSize(); ++j) {
+		if (check&&j == 69 || j == 99)
+			cout << "hello";
 		int aid = bk[j].advisorID;
 		float score = bk[j].score;
 		int sid = bk[j].studentID;
-		wDB.write(reinterpret_cast<char*>(&aid), 4);
+		wDB.write((char*)(&aid), 4);
+		if (check)
+			cout << wDB.tellp() << endl;
 		wDB.write(bk[j].name, 20);
-		wDB.write(reinterpret_cast<char*>(&sid), 4);
-		wDB.write(reinterpret_cast<char*>(&score), 4);
+		if (check)
+			cout << wDB.tellp() << endl;
+		wDB.write((char*)(&sid), 4);
+		if (check)
+			cout << wDB.tellp() << endl;
+		int beg = wDB.tellp();
+		wDB.write((char*)(&score), 4);
+		int end = wDB.tellp();
+		if (end - beg > 4) {			
+			wDB.seekp(4 + beg - end, ios::cur);
+		}
+		if (check)
+			cout << wDB.tellp() << endl;
 	}
 	// 블럭의 크기 만큼 데이터 빈공간 채우기.
-	int buffer[5]={ 0,0,0,0,0 };
+	int buffer[6] = { 0,0,0,0,0 ,0 };
 	for (int j = 0; j < bk.getCapacity() - bk.getSize(); ++j) {
-		wDB.write(reinterpret_cast<char*>(buffer), 4);
-		wDB.write(reinterpret_cast<char*>(buffer), 20);
-		wDB.write(reinterpret_cast<char*>(buffer), 4);
-		wDB.write(reinterpret_cast<char*>(buffer), 4);
+		wDB.write((char*)(buffer), 4);
+		wDB.write((char*)(buffer), 20);
+		wDB.write((char*)(buffer), 4);
+		wDB.write((char*)(buffer), 4);
+		if (check)
+			cout << wDB.tellp() << endl;
+
 	}
-	wDB.write(reinterpret_cast<char*>(buffer), 20);
+	wDB.write((char*)(buffer), 20);
+	if (check)
+		cout << wDB.tellp() << endl;
+
 }
 vector<StudentBucket*> FileManager::bucketLoadAll(StudentBucket* bk,ifstream& rDB)
 {
@@ -137,18 +159,18 @@ void FileManager::bucketLoad(ProfessorBucket** bk, int blk, ifstream &rDB)
 		*bk = nullptr;
 		return;
 	}
-	rDB.read(reinterpret_cast<char*>(&blkNum), 4);
-	rDB.read(reinterpret_cast<char*>(&size), 4);
-	rDB.read(reinterpret_cast<char*>(&level), 4);
+	rDB.read((char*)(&blkNum), 4);
+	rDB.read((char*)(&size), 4);
+	rDB.read((char*)(&level), 4);
 	if (rDB.fail()){
 		*bk = nullptr;
 		return;
 	}
 	assert(blk == blkNum);
 	for (int i = 0; i<size; ++i) {
-		rDB.read(reinterpret_cast<char*>(&t_aid), 4);
+		rDB.read((char*)(&t_aid), 4);
 		rDB.read(t_n, 20);
-		rDB.read(reinterpret_cast<char*>(&salary), 4);
+		rDB.read((char*)(&salary), 4);
 		Professor pro;
 		pro.ProfID = t_aid;
 		int len = MyStrCpy(pro.name, t_n);
@@ -170,20 +192,19 @@ void FileManager::bucketLoad(StudentBucket** bk,int blk,ifstream &rDB)
 		*bk = nullptr;
 		return;
 	}
-	cout << rDB.tellg() / BLOCK_SIZE << rDB.tellg() % BLOCK_SIZE <<endl;
-	rDB.read(reinterpret_cast<char*>(&blkNum), 4);
-	rDB.read(reinterpret_cast<char*>(&size), 4);
-	rDB.read(reinterpret_cast<char*>(&level), 4);
+	rDB.read((char*)(&blkNum), 4);
+	rDB.read((char*)(&size), 4);
+	rDB.read((char*)(&level), 4);
 	if (rDB.fail()){
 		*bk = nullptr;
 		return;
 	}
-	assert(blk == blkNum);
+	//assert(blk == blkNum);
 	for(int i=0;i<size;++i){
-		rDB.read(reinterpret_cast<char*>(&t_aid), 4);
+		rDB.read((char*)(&t_aid), 4);
 		rDB.read(t_n, 20);
-		rDB.read(reinterpret_cast<char*>(&t_sid), 4);
-		rDB.read(reinterpret_cast<char*>(&t_score), 4);
+		rDB.read((char*)(&t_sid), 4);
+		rDB.read((char*)(&t_score), 4);
 		Student stu;
 		stu.advisorID = t_aid;
 		int len = MyStrCpy(stu.name, t_n);
@@ -207,6 +228,7 @@ vector<Student> FileManager::readStudent(HashTable& tlb, BPlusTree& tree)
 	for (int i = 0; i<num; ++i) {
 		ifs.getline(buffer, 1024);
 		char* buff = buffer;
+		int subFloat;
 		Student stu;
 		int next = 0;
 		char *data;
@@ -225,11 +247,24 @@ vector<Student> FileManager::readStudent(HashTable& tlb, BPlusTree& tree)
 		stu.score = atof(data);
 		next = strlen(data);
 		buff = buff + next + 1;
+		
+		subFloat = data[0] - '0';
+		int j = 1;
+		for (; data[j] != '\0'; j++) {
+			
+			if (data[j] == '.')
+				continue;
+			subFloat = (subFloat * 10) + (data[j] - '0');
+		}
 
+		if (j == 1)
+			j = 2;
+		for (; j < 10; j++)
+			subFloat *= 10;
 		data = strtok(buff, ",");
 		stu.advisorID = atoi(data);
 		tlb.insert(stu);
-		//tree.insert(stu.score * 100000, stu.studentID);		
+		tree.insert(subFloat, stu.studentID);
 	}
 	ifs.close();
 	return students;
@@ -264,7 +299,7 @@ vector<Professor> FileManager::readProfessor(HashTable & tlb, BPlusTree & tree)
 		data = strtok(buff, ",");
 		pro.Salary = atoi(data);
 		tlb.insert(pro);
-		//tree.insert(pro.Salary, pro.ProfID);
+		tree.insert(pro.Salary, pro.ProfID);
 	}
 	ifs.close();
 	return professors;

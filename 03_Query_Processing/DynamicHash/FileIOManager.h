@@ -11,12 +11,14 @@ using namespace std;
 
 class FileManager {
 public:
+	bool check=false;
 	void hashsave(const HashTable& tlb);
 	vector<int> hashload(BucketFactory::Type type);
 	// 디비 저장
 	template<typename Type>
 	void DBsave( HashTable& tlb,string path)
 	{
+		check = true;
 		vector<Bucket*> buck = tlb.getBucket();
 		ofstream writeFile(path.data(), ios::binary);
 		for (auto it = buck.begin(); it != buck.end(); ++it) {
