@@ -1,12 +1,18 @@
 #include "b+Tree.cpp"
 #include "b+TreeSearch.cpp"
 #include "b+TreeInsert.cpp"
-#include "b+TreeIO.cpp"
+
+#include "b+TreeIO2.cpp"
+
 //#include "../Index_Hashing/HashTable.cpp"
 
 int main() {
   BPlusTree* tree = new BPlusTree();
-  for (int i = 1; i <= 30; i++)
+  readStudent(tree);
+  tree->print();
+  /*
+  BPlusTree* tree = new BPlusTree();
+  for (int i = 1; i <= 100000000; i++)
     tree->insert(i, i+1000);
   
   tree->insert(12.5,1000000);
@@ -20,12 +26,6 @@ int main() {
   
 
   tree->print();
-
-  
-  //HashTable* htb = new HashTable();
-  //tree->printWithBlockNum(*htb);
-
-  //tree->findKthTerminal(11);
-  //tree->findKthTerminal(12);
+  */
   return 0;
 }

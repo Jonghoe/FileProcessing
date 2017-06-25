@@ -65,11 +65,7 @@ int main() {
 			tree->deleteTree();
 			delete tree;
 		}
-		tree = new BPlusTree();
-		/*for (int i = 0; i < students.size(); ++i) {
-			tlb->insert(students[i]);			
-			tree->insert(students[i].score, students[i].studentID);
-		}*/
+		tree = new BPlusTree();		
 		fm.readcsv(*tlb, *tree);
 		cout << ".";
 		fm.hashsave(*tlb);
@@ -78,11 +74,7 @@ int main() {
 		cout << ".";
 		tree->storeTree();
 		cout << "."<<endl;
-		cout << "Load complete" << endl;
-		/*for (int i = 0; i < students.size();++i){
-			if (!tlb->check(students[i].studentID))
-				cout << "H";
-		}*/
+		cout << "Load complete" << endl;		
 		getch();
       break;
 	case RELEASE:

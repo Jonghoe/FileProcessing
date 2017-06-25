@@ -57,6 +57,12 @@ public:
 				writeFile.write((char*)&sid, 4);
 				writeFile.write((char*)&score,4);
 			}
+			for (int j = 0; j < buck[i]->getCapacity() - buck[i]->getSize(); ++j) {
+				writeFile.write((char*)0, 4);
+				writeFile.write((char*)0, 20);
+				writeFile.write((char*)0, 4);
+				writeFile.write((char*)0, 4);
+			}
 		}
 		writeFile.close();
 	}
@@ -88,6 +94,7 @@ public:
 				bk->insert(stu);
 			}
 			bks.push_back(bk);
+			rdb.seekg(BLOCK_SIZE*bks.size());
 		} while (!rdb.eof());
 		bks.pop_back();
 		return bks;
@@ -119,7 +126,7 @@ public:
 			buff = buff + next + 1;
 
 			data = strtok(buff, ",");
-			stu.score = atof(data);
+			stu.score = atof(data)* 100000;
 			next = strlen(data);
 			buff = buff + next + 1;
 
@@ -138,6 +145,7 @@ public:
 			}
 		}
 		ifs.close();
+		tree.print();
 		return vector<Student>();
 	}
 };

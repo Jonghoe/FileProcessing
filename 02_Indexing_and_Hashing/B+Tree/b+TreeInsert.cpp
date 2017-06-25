@@ -4,7 +4,7 @@
 #ifndef BPLUSTREEINSERT_CPP
 #define BPLUSTREEINSERT_CPP
 
-bool BPlusTree::insert(float score, int idIn) {
+bool BPlusTree::insert(int score, int idIn) {
   Node* insertVal = rootNode->insert(score, idIn);
 
   // if no overflow
@@ -25,7 +25,7 @@ bool BPlusTree::insert(float score, int idIn) {
   }
 }
 
-Node* InternalNode::insert(float score, int idIn) {
+Node* InternalNode::insert(int score, int idIn) {
   // 1. find where to insert
   int insertIndex = 0;
   
@@ -88,7 +88,7 @@ Node* InternalNode::insert(float score, int idIn) {
   }
 }  
 
-Node* TerminalNode::insert(float score, int idIn) {
+Node* TerminalNode::insert(int score, int idIn) {
   // base case : first insert in the node
   if (storedRecordNumber == 0) {
     scores[0] = score;
