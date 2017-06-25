@@ -3,14 +3,16 @@
 #include"StudentBucket.h"
 #include<cassert>
 using namespace std;
+int StudentBucket::nextBlkNum = initNum;
 StudentBucket::StudentBucket():size(0), capacity((BLOCK_SIZE-12)/sizeof(Student)), blkNum(nextBlkNum++), level(1)
 {
+	if(nextBlkNum==1)
+		cout << capacity << endl;
 	records = new Student[capacity];
 }
 
 StudentBucket::StudentBucket(int l) : size(0), capacity((BLOCK_SIZE - 12) / sizeof(Student)), blkNum(nextBlkNum++), level(l)
 {
-
 	records = new  Student[capacity];
 }
 

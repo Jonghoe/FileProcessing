@@ -3,18 +3,19 @@
 #include"Bucket.h"
 class StudentBucket :public Bucket{
 protected:
+	static int nextBlkNum;
 	const int capacity;
 	int level;
 	int size;
 	Student* records;
 	int blkNum;
 public:
-	
 	StudentBucket(int l);
 	StudentBucket();
 	int getBlkNum() const{
 		return blkNum;
 	}
+	static void resetNextBlkNum() { nextBlkNum = initNum; }
 	//position의 record를 삭제 및 반환
 	Student erase(int position);
 	int getLevel()const;
@@ -23,4 +24,5 @@ public:
 	int getSize()const;
 	int getCapacity()const;
 	Student& operator[](int idx)const { return records[idx]; };
+	const static int initNum =0;
 };

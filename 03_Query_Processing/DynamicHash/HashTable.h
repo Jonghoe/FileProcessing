@@ -12,19 +12,24 @@ protected:
 	int maxLevel;
 	vector<int> table;	
 	vector<Bucket*> buckets;
+	
 public:
 	HashTable(BucketFactory::Type t );
 	HashTable(BucketFactory::Type t,const vector<int>& tb, const vector<Bucket*>& b);
 	void insert(Student& record);
+	void insert(Professor& record);
 	int findHash(unsigned key)const;
 	void printTable()const;
 	const vector<Bucket*>& getBucket()const;
 	const vector<int>& getTable()const;
 	unsigned getBlkNum(int key)const;
-	
+	BucketFactory::Type getType()const { return type; }
 	// 키값이 유요한지 확인
 	bool check(unsigned key)const;
 	~HashTable();
+	void printBucket()const;
+	ofstream out;
+	ifstream in;
 private:
 	// 입력 오버 플로우가 생겼을 시 이미 늘어나 있는 테이블들 중 뒤쪽 table들을 수정 
 	// ex)  hash값이 0110인 값이 들어오고 0010이 오버 플로우 나면서 0110에 class DataType number가 4인 class DataType 생성
@@ -53,7 +58,7 @@ private:
 	bool modifyBlock(int blk);
 	void createBucket(int blk);
 	void createBucket(int blk, int level);
-	void bucketSave();
+	void bucketSave(Bucket* buck);
 };
 
 int MyStrCpy(char* dst, const char* src);

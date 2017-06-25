@@ -1,7 +1,7 @@
+#pragma once
 #include "BucketFactory.h"
 #include "StudentBucket.h"
 #include "ProfcessorBucket.h"
-#pragma once
 
 Bucket * BucketFactory::createBucket(Type t,int level)
 {

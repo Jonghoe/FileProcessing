@@ -39,6 +39,9 @@
     <ClInclude Include="ProfcessorBucket.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Join.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FileIOmanager.cpp">
@@ -72,6 +75,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Bucket.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="sample.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

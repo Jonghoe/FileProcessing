@@ -144,6 +144,7 @@
     <ClInclude Include="..\B+Tree\b+Tree.h" />
     <ClInclude Include="Bucket.h" />
     <ClInclude Include="BucketFactory.h" />
+    <ClInclude Include="Join.h" />
     <ClInclude Include="ProfcessorBucket.h" />
     <ClInclude Include="StudentBucket.h" />
     <ClInclude Include="CommonData.h" />
@@ -158,10 +159,17 @@
     <ClCompile Include="Bucket.cpp" />
     <ClCompile Include="BucketFactory.cpp" />
     <ClCompile Include="ProfcessorBucket.cpp" />
+    <ClCompile Include="sample.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="StudentBucket.cpp" />
     <ClCompile Include="FileIOmanager.cpp" />
     <ClCompile Include="HashTable.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">아니오</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">아니오</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -12,7 +12,7 @@ using namespace std;
 class FileManager {
 public:
 	void hashsave(const HashTable& tlb);
-	vector<int> hashload();
+	vector<int> hashload(BucketFactory::Type type);
 	// 디비 저장
 	template<typename Type>
 	void DBsave( HashTable& tlb,string path)
@@ -20,16 +20,17 @@ public:
 		vector<Bucket*> buck = tlb.getBucket();
 		ofstream writeFile(path.data(), ios::binary);
 		for (auto it = buck.begin(); it != buck.end(); ++it) {
-			bucketSave(*((Type*)*it), (*it)->getOut());
+			bucketSave(*((Type*)*it), tlb.out);
 		}
 		writeFile.close();
 	}
 
 	Bucket* bucketSave(const ProfessorBucket& bk, ofstream& wDB);
 	Bucket* bucketSave(const StudentBucket& bk, ofstream& wDB);
-
-	void bucketLoad(StudentBucket* bk, int blk, ifstream &rDB);
-	void bucketLoad(ProfessorBucket* bk, int blk, ifstream &rDB);
+	vector<StudentBucket*> bucketLoadAll(StudentBucket* bk, ifstream& rDB);
+	vector<ProfessorBucket*> bucketLoadAll(ProfessorBucket* bk, ifstream& rDB);
+	void bucketLoad(StudentBucket** bk, int blk, ifstream &rDB);
+	void bucketLoad(ProfessorBucket** bk, int blk, ifstream &rDB);
 
 	template<typename Type>
 	vector<Bucket*> bucketload(string path)
@@ -39,9 +40,11 @@ public:
 		vector<Bucket*> bks;
 		int i = 0;
 		Type* bk = nullptr;
-		bucketLoad(bk, i, ifstream(path, ios::binary));
+		bucketLoad(&bk, i, ifstream(path, ios::binary));
+		if (bk != nullptr)
+			++i;
 		while (bk != nullptr) {
-			bucketLoad(bk, i, ifstream(path, ios::binary));
+			bucketLoad(&bk, i, ifstream(path, ios::binary));
 			if (bk != nullptr) {
 				bks.push_back(bk);
 				++i;

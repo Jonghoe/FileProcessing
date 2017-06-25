@@ -3,6 +3,8 @@
 #include<iostream>
 #include<cassert>
 using namespace std;
+int ProfessorBucket::nextBlkNum = initNum;
+
 ProfessorBucket::ProfessorBucket() :size(0), capacity((BLOCK_SIZE - 12) / sizeof(Professor)), blkNum(nextBlkNum++), level(1)
 {
 	records = new Professor[capacity];
@@ -10,7 +12,6 @@ ProfessorBucket::ProfessorBucket() :size(0), capacity((BLOCK_SIZE - 12) / sizeof
 
 ProfessorBucket::ProfessorBucket(int l) : size(0), capacity((BLOCK_SIZE - 12) / sizeof(Professor)), blkNum(nextBlkNum++), level(l)
 {
-
 	records = new  Professor[capacity];
 }
 

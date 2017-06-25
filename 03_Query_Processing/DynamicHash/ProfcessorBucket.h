@@ -2,6 +2,7 @@
 #include"Bucket.h"
 #include"CommonData.h"
 class ProfessorBucket :public Bucket{
+	static int nextBlkNum;
 protected:
 	const int capacity;
 	int level;
@@ -23,5 +24,6 @@ public:
 	int getSize()const;
 	int getCapacity()const;
 	Professor& operator[](int idx)const { return records[idx]; };
-
+	const static int initNum=10000000;
+	static void resetNextBlkNum() { nextBlkNum = initNum; }
 };
