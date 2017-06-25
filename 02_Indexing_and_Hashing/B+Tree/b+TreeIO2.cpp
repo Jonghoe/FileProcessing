@@ -136,18 +136,18 @@ int readStudent(BPlusTree* tree) {
   }
 };
 
-int float2Int(String floatIn) {
+int float2Int(string floatIn) {
   int scoreCal = floatIn[0] - '0';
-    i = 1;
-    for (; floatIn[i] != '\0'; i++) {
-      if (floatIn[i] == '.')
-	continue;
-      scoreCal = (scoreCal * 10) + (floatIn[i] - '0');
-    }
-    if (i == 1)
-      i = 2;
-    for (; i < 10; i++)
-      scoreCal *= 10;
+  int i = 1;
+  for (; floatIn[i] != '\0'; i++) {
+    if (floatIn[i] == '.')
+      continue;
+    scoreCal = (scoreCal * 10) + (floatIn[i] - '0');
+  }
+  if (i == 1)
+    i = 2;
+  for (; i < 10; i++)
+    scoreCal *= 10;
 }
 
 char* int2Float(int intIn) {
