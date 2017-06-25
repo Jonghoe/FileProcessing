@@ -10,7 +10,7 @@ class Node;
 class InternalNode;
 class TerminalNode;
 
-class BPlusTree{
+class BPlusTree {
 protected:
   Node* rootNode;
   /*
@@ -31,7 +31,8 @@ public:
   //  TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(int scoreLowerBound);
-  void print();
+  int*  search(int scoreLowerBound, int scoreUpperBound);
+  void  print();
   //  void printWithBlockNum(const HashTable& hashTable);
 };
 
@@ -115,8 +116,8 @@ protected:
   bool deleteTree();
   
   Node* searchFirstMatch(int scoreLowerBound);
-  int*  search(int scoreLowerBound, int scoreUpperBound);
   Node* insert(int score, int idIn);
+  int*  search(int scoreLowerBound, int scoreUpperBound);
 
 public:
   void print(int indent);

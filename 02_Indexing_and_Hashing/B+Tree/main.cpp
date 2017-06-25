@@ -9,23 +9,16 @@
 int main() {
   BPlusTree* tree = new BPlusTree();
   readStudent(tree);
-  tree->print();
-  /*
-  BPlusTree* tree = new BPlusTree();
-  for (int i = 1; i <= 100000000; i++)
-    tree->insert(i, i+1000);
-  
-  tree->insert(12.5,1000000);
-  tree->insert(1,1);
-  tree->insert(2, 2);
-  
-  tree->insert(3, 2);
-  //tree->insert(4, 2);
-  //tree->insert(5, 2);
-  //tree->insert(3.5, 1000);
-  
+  //tree->print();
 
-  tree->print();
-  */
+  int* result = tree->search(120252000, 120522000);
+  printf("%d\n\n", result[0]);
+  int matchSize = result[0];
+  for (int i = 1; i <= matchSize; i++) {
+    printf("%d\t", result[i]);
+    if (i%10 == 0)
+      printf("\n");
+  }
+
   return 0;
 }
