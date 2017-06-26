@@ -5,6 +5,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <conio.h>
+#include"QueryProcessing.h"
 #include "FileIOManager.h"
 #include "b+Tree.h"
 
@@ -14,7 +15,7 @@ const int RELEASE = 2;
 const int FILES = 3;
 const int PRINTDB = 4;
 const int PRINTHASH = 5;
-const int PRINTkTH = 6;
+const int Query = 6;
 const int EXIT = 7;
 void printMenu()
 {
@@ -24,7 +25,7 @@ void printMenu()
 	cout << "[3] Load from 'Students.DB', 'Students.hash', and 'Students_score.idx'" << endl;
 	cout << "[4] Print DB" << endl;
 	cout << "[5] Print Hash" << endl;
-	cout << "[6] Print kth leaf node" << endl;
+	cout << "[6] Execute Query" << endl;
 	cout << "[7] Exit" << endl;
 
 	cout << "Insert a number : ";
@@ -45,9 +46,9 @@ void printReadFiles()
 int main()
 {
 
-	int selected = 0, k;
+	int selected = 0;
 	BPlusTree* studentTree = NULL;
-	BPlusTree* professorTree = NULL;
+	BPlusTree* professorTree = new BPlusTree();
 
 	HashTable* studentTable = NULL;
 	HashTable* professorTable = NULL;
@@ -91,12 +92,14 @@ int main()
 			fm.hashsave(*professorTable);
 			cout << "clear" << endl;
 			cout << ".";
-				fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
+			fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
 			fm.DBsave<ProfessorBucket>(*professorTable,"Professors.DB");
 			cout << ".";
 			//studentTree->storeTree();
 			cout << "." << endl;
 			cout << "Load complete" << endl;
+			
+//			readProf(professorTree);
 			getch();
 			break;
 		case RELEASE:
@@ -124,7 +127,7 @@ int main()
 			cout << ".";
 			StudentBucket::resetNextBlkNum();
 			ProfessorBucket::resetNextBlkNum();
-			buckets = fm.bucketload<StudentBucket>("Students.DB");
+			buckets = fm.bucketload<StudentBucket>(*studentTable);
 			cout << ".";
 			table = fm.hashload(BucketFactory::Type::student);
 			cout << ".";
@@ -134,7 +137,7 @@ int main()
 			cout << "Created Student Table!!!!" << endl;
 			
 			cout << "Read Professors.DB";
-			buckets = fm.bucketload<ProfessorBucket>("Professors.DB");
+			buckets = fm.bucketload<ProfessorBucket>(*professorTable);
 			cout << ".";
 			table = fm.hashload(BucketFactory::Type::professor);
 			cout << "." << endl;
@@ -146,9 +149,12 @@ int main()
 			//studentTree->deleteTree();
 			//studentTree->loadTree();
 			cout << "Loading from Files complete";
+			fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
+			fm.DBsave<ProfessorBucket>(*professorTable, "Professors.DB");
+
 			getch();
 			break;
-		case PRINTDB:			
+		case PRINTDB:
 			studentTable->printBucket();
 			professorTable->printBucket();
 			getch();
@@ -159,15 +165,8 @@ int main()
 			}
 			getch();
 			break;
-		case PRINTkTH:
-			cout << "Enter number k : ";
-			cin >> k;
-			//studentTree->findKthTerminal(k)->print(0);
-
-			table = fm.hashload(BucketFactory::Type::student);
-			for (int i = 0; i < table.size(); ++i) {
-				cout << "table IDX[" << i << "] = " << table[i] << endl;
-			}
+		case Query:
+			query(*studentTree,*professorTree,*studentTable,*professorTable);
 			getch();
 			break;
 		case EXIT:

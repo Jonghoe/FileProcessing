@@ -13,12 +13,10 @@ bool BPlusTree::insert(int score, int idIn) {
   // if overflow
   else {
     InternalNode* newRootNode = new InternalNode();
-
     newRootNode->storedRecordNumber = 2;
     newRootNode->branchs[0] = rootNode;
     newRootNode->branchs[1] = insertVal;
     newRootNode->scoreDeli[0] = newRootNode->branchs[1]->minVal();
-
     rootNode = newRootNode;
     
     return true;

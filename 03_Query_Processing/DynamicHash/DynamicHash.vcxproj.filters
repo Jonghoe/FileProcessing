@@ -15,35 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FileIOManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonData.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="HashTable.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="StudentBucket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Bucket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="BucketFactory.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="ProfcessorBucket.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\B+Tree\b+Tree.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryProcessing.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="FileIOmanager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -83,5 +54,37 @@
     <ClCompile Include="..\B+Tree\b+TreeIO.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\query.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\B+Tree\b+Tree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Bucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BucketFactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FileIOManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ProfcessorBucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryProcessing.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="StudentBucket.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
