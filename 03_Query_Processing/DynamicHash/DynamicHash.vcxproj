@@ -143,7 +143,6 @@
   <ItemGroup>
     <ClCompile Include="..\B+Tree\b+Tree.cpp" />
     <ClCompile Include="..\B+Tree\b+TreeInsert.cpp" />
-    <ClCompile Include="..\B+Tree\b+TreeIO.cpp" />
     <ClCompile Include="..\B+Tree\b+TreeIO2.cpp" />
     <ClCompile Include="..\B+Tree\b+TreeSearch.cpp" />
     <ClCompile Include="..\query.cpp" />
@@ -151,15 +150,15 @@
     <ClCompile Include="BucketFactory.cpp" />
     <ClCompile Include="ProfcessorBucket.cpp" />
     <ClCompile Include="sample.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">아니오</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">아니오</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="StudentBucket.cpp" />
     <ClCompile Include="FileIOmanager.cpp" />
     <ClCompile Include="HashTable.cpp" />
     <ClCompile Include="main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">아니오</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">아니오</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,10 +13,12 @@ bool BPlusTree::insert(int score, int idIn) {
   // if overflow
   else {
     InternalNode* newRootNode = new InternalNode();
+
     newRootNode->storedRecordNumber = 2;
     newRootNode->branchs[0] = rootNode;
     newRootNode->branchs[1] = insertVal;
     newRootNode->scoreDeli[0] = newRootNode->branchs[1]->minVal();
+
     rootNode = newRootNode;
     
     return true;
@@ -97,7 +99,7 @@ Node* TerminalNode::insert(int score, int idIn) {
   // exception
   if (nextTerminalNode != NULL){
     // (1) this should be in the next node
-    if ( nextTerminalNode->minVal() < score) {
+    if ( nextTerminalNode->minVal() <= score) {
       //std::cout << "go to next terminal not in right place" << std::endl;
       return nextTerminalNode->insert(score, idIn);
     }
@@ -192,8 +194,6 @@ Node* TerminalNode::insert(int score, int idIn) {
     return NULL;
   }
 }
-
-
 
 
 // function to help internalNode::insert()

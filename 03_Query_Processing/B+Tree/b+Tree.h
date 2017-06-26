@@ -1,34 +1,34 @@
 
 #ifndef BPLUSTREE_H
 #define BPLUSTREE_H
+//#include "../Index_Hashing//HashTable.h"
 #include <fstream>
-#include<vector>
-
 using namespace std;
 
 class BPlusTree;
 class Node;
 class InternalNode;
 class TerminalNode;
+
 class BPlusTree {
 protected:
   Node* rootNode;
-  
+  /*
   void findNode(Node* node, ofstream& ofs);  
   void printNode(InternalNode* node, ofstream& ofs);
   void printNode(TerminalNode* node, ofstream& ofs);
   void reCreateTree(Node*,vector<InternalNode*>& ins, vector<TerminalNode*> tns);
-  
+  */
 public:
   BPlusTree();
 
-  bool storeTree(int flag);
-  bool loadTree();
+  //bool storeTree();
+  //bool loadTree();
 
   bool deleteTree();
   
   bool insert(int score, int idIn);
-  TerminalNode* findKthTerminal(int k);
+  //  TerminalNode* findKthTerminal(int k);
   // return first match terminal node
   Node* searchFirstMatch(int scoreLowerBound);
   int*  search(int scoreLowerBound, int scoreUpperBound);
