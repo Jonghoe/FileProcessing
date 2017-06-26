@@ -137,9 +137,11 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	else if (attr[0]=='S') {
 	  // 6. select * from professor where Salary = XXXXXX
 	  fscanf(quIn, ", %d\n", &temp1);
-	  //printf("select * from professor where Salary = %d", temp1);
-	  //fprintf(quOut, "select * from professor where Salary = %d", temp1);
-	  fprintf(quOut, "1\n");
+	  int* result = prof->search(temp1, temp1);
+	  int  matchSize = result[0];
+	  fprintf(quOut, "%d\n", matchSize);
+	  for (int i = 1; i <= matchSize; i++)
+	    fprintf(quOut, "%d\n", result[i]);
 	}
 	else
 	  printf("ERROR: Invalid attribute in professors table\n");
@@ -148,8 +150,6 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	if (attr[0]=='S') {
 	  // 7. select * from professor where Salary <= XXXXXX AND Salary >= XXXXXX
 	  fscanf(quIn, ", %d, %d\n", &temp1, &temp2);
-	  //printf("select * from professor where Salary >= %d AND Salary <= %d", temp1, temp2);
-	  //fprintf(quOut, "select * from professor where Salary >= %d AND Salary <= %d", temp1, temp2);
 
 	  int* result = prof->search(temp1, temp2);
 	  int  matchSize = result[0];

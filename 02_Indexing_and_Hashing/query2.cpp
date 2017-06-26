@@ -154,13 +154,13 @@ int query(BPlusTree& stu,BPlusTree& pro,HashTable& stuH,HashTable& proH) {
 	else if (attr[0]=='S') {
 	  // 6. select * from professor where Salary = XXXXXX
 	  fscanf(quIn, ", %d\n", &temp1);
-	  fscanf(dataIn, "%d\n", &tempNum);
-	  if (tempNum != 1) {
-	    printf("ERROR: queryTemp.txt is wrong\n");
-	  }
-	  else { // code here
+	  fscanf(dataIn, "%d\n", tempNum);
+	  int* result = new int [tempNum];
 	  
-	  }
+	  for (int i = 0; i < tempNum; i++)
+	    fscanf(dataIn, "%d\n", result[i]);
+
+	  // code here with int *result
 	}
 	else
 	  printf("ERROR: Invalid attribute in professors table\n");
