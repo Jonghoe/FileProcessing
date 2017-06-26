@@ -107,9 +107,9 @@ void readStudent(BPlusTree* tree) {
   //  readStud.open("SampleData/student_data.csv");
   FILE *stFP;
   
-  stFP = fopen("./SampleData/student_data.csv", "r");
+  stFP = fopen("./SampleData/std_data.csv", "r");
   if(!stFP){
-        printf("Error: no student_data.csv found\n");
+        printf("Error: no std_data.csv found\n");
   }
   fscanf(stFP, "%d\n", &studNum);
   printf("%d\n", studNum);

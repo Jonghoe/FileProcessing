@@ -8,8 +8,8 @@
 
 int main() {
   BPlusTree* tree = new BPlusTree();
-  //readStudent(tree);
-  readProf(tree);
+  readStudent(tree);
+  //readProf(tree);
   tree->print();
   /*
   int* result = tree->search(120252000, 120522000);

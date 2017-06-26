@@ -1,8 +1,7 @@
-7
-Search-Exact, Professors, ProfID, 2750
-Search-Exact, Professors, Salary, 103902
-Search-Range, Professors, Salary, 109894, 111942
-Search-Exact, Students, studentID, 21415
-Search-Exact, Students, Score, 3.0
-Search-Range, Students, Score, 3.0, 4.0
-Join, Professors, Students
+6
+Search-Exact, Professors, ProfID, 6386
+Search-Exact, Professors, ProfID, 4217
+Search-Exact, Students, studentID, 449
+Search-Exact, Students, studentID, 20273
+Search-Range, Students, Score, 2.501, 2.511
+Search-Range, Professors, Salary, 100491, 101410
