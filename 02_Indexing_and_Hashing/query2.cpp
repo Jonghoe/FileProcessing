@@ -61,9 +61,13 @@ char* int2Float(int intIn) {
 int query(BPlusTree* stud, BPlusTree* prof ) {
   int queryNum, temp1, temp2;
   char search[13], table[11], attr[7], temp3[10], temp4[10];
+  int tempNum;
   FILE* quIn = fopen("./query.dat", "r");
-  FILE* quOut = fopen("../03_Query_Processing/queryTemp.txt", "w");
+  FILE* dataIn = fopen("./queryTemp.txt", "r");
+  FILE* quOut = fopen("../query.res", "w");
   if (!quIn)
+    printf("ERROR: Unable to find query.dat");
+  if (!dataIn)
     printf("ERROR: Unable to find query.dat");
   if (!quOut)
     printf("ERROR: Unable to find query.dat");
@@ -77,9 +81,13 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
       if ((table[0] == 'P' && attr[0] == 'S')
 	  || (table[0] == 'S' && attr[0] == 'P')) {
 	// 1. select * from student join professor
-	//printf("JOIN\n");
-	//fprintf(quOut, "JOIN\n");
-	fprintf(quOut, "0\n");
+	fscanf(dataIn, "%d\n", %tempNum);
+	if (tempNum != 0) {
+	  printf("ERROR: queryTemp.txt is wrong\n");
+	}
+	else { // code here
+	  
+	}
       }
       else {
 	printf("ERROR: Invalid table name in join\n");
@@ -90,31 +98,39 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	if (attr[1]=='t') {
 	  // 2. select * from student where id = XXXXXXXXX
 	  fscanf(quIn, ", %d\n", &temp1);
-	  //printf("select * from student where id = %d", temp1);
-	  //fprintf(quOut, "select * from student where id = %d", temp1);
-	  fprintf(quOut, "1\n");
+	  fscanf(dataIn, "%d\n", &tempNm);
+	  if (tempNum != 1) {
+	    printf("ERROR: queryTemp.txt is wrong\n");
+	  }
+	  else { // code here
+	  
+	  }
 	}
 	else if (attr[1]=='c') {
 	  // 3. select * from student where score = X.XXXXX
 	  fscanf(quIn, ", %[^\n]\n", temp3);
-	  //printf("select * from student where score = %d\n", float2Int(temp3));
-	  //fprintf(quOut, "select * from student where score = %d\n", float2Int(temp3));
-	  fprintf(quOut, "1\n");
+	  fscanf(dataIn, "%d\n", &tempNum);
+	  if (tempNum != 1) {
+	    printf("ERROR: queryTemp.txt is wrong\n");
+	  }
+	  else { // code here
+	  
+	  }
 	}
-	else
+	else 
 	  printf("ERROR: Invalid attribute in students table\n");
       }
       else if (search[7]=='R') {
 	if (attr[1]=='c') {
 	  // 4. select * from student where score <= X.XXXXX AND X.XXXXX <= score
 	  fscanf(quIn, ", %[^,], %[^\n]\n", temp3, temp4);
-	  //printf("select * from student where score <= %d AND %d <= score", float2Int(temp3), float2Int(temp4));
-	  //fprintf(quOut, "select * from student where score <= %d AND %d <= score", float2Int(temp3), float2Int(temp4));
-	  int* result = stud->search(float2Int(temp3), float2Int(temp4));
-	  int  matchSize = result[0];
-	  fprintf(quOut, "%d\n", matchSize);
-	  for (int i = 1; i <= matchSize; i++)
-	    fprintf(quOut, "%d\n", result[i]);
+	  fscanf(dataIn, "%d\n", tempNum);
+	  int* result = new int [tempNum];
+	  
+	  for (int i = 0; i < tempNum; i++)
+	    fscanf(dataIn, "%d\n", result[i]);
+
+	  // code here with int *result
 	}
 	else
 	  printf("ERROR: Invalid attribute in students table\n");
@@ -127,16 +143,24 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	if (attr[0]=='P') {
 	  // 5. select * from professor where ProfID = XXXXXXXXX
 	  fscanf(quIn, ", %d\n", &temp1);
-	  //printf("select * from professor where ProfID = %d", temp1);
-	  //fprintf(quOut, "select * from professor where ProfID = %d", temp1);
-	  fprintf(quOut, "1\n");
+	  fscanf(dataIn, "%d\n", &tempNum);
+	  if (tempNum != 1) {
+	    printf("ERROR: queryTemp.txt is wrong\n");
+	  }
+	  else { // code here
+	  
+	  }
 	}
 	else if (attr[0]=='S') {
 	  // 6. select * from professor where Salary = XXXXXX
 	  fscanf(quIn, ", %d\n", &temp1);
-	  //printf("select * from professor where Salary = %d", temp1);
-	  //fprintf(quOut, "select * from professor where Salary = %d", temp1);
-	  fprintf(quOut, "1\n");
+	  fscanf(dataIn, "%d\n", &tempNum);
+	  if (tempNum != 1) {
+	    printf("ERROR: queryTemp.txt is wrong\n");
+	  }
+	  else { // code here
+	  
+	  }
 	}
 	else
 	  printf("ERROR: Invalid attribute in professors table\n");
@@ -145,14 +169,14 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	if (attr[0]=='S') {
 	  // 7. select * from professor where Salary <= XXXXXX AND Salary >= XXXXXX
 	  fscanf(quIn, ", %d, %d\n", &temp1, &temp2);
-	  //printf("select * from professor where Salary >= %d AND Salary <= %d", temp1, temp2);
-	  //fprintf(quOut, "select * from professor where Salary >= %d AND Salary <= %d", temp1, temp2);
+	  fscanf(dataIn, "%d\n", tempNum);
+	  int* result = new int [tempNum];
+	  
+	  for (int i = 0; i < tempNum; i++)
+	    fscanf(dataIn, "%d\n", result[i]);
 
-	  int* result = prof->search(temp1, temp2);
-	  int  matchSize = result[0];
-	  fprintf(quOut, "%d\n", matchSize);
-	  for (int i = 1; i <= matchSize; i++)
-	    fprintf(quOut, "%d\n", result[i]);
+	  // code here with int *result
+	  
 	}
 	else
 	  printf("ERROR: Invalid attribute in professors table\n");
