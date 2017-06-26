@@ -97,9 +97,12 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	else if (attr[1]=='c') {
 	  // 3. select * from student where score = X.XXXXX
 	  fscanf(quIn, ", %[^\n]\n", temp3);
-	  //printf("select * from student where score = %d\n", float2Int(temp3));
-	  //fprintf(quOut, "select * from student where score = %d\n", float2Int(temp3));
-	  fprintf(quOut, "1\n");
+	  
+	  int* result = stud->search(float2Int(temp3), float2Int(temp3));
+	  int  matchSize = result[0];
+	  fprintf(quOut, "%d\n", matchSize);
+	  for (int i = 1; i <= matchSize; i++)
+	    fprintf(quOut, "%d\n", result[i]);
 	}
 	else
 	  printf("ERROR: Invalid attribute in students table\n");

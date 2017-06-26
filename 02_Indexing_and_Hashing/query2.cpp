@@ -58,7 +58,7 @@ char* int2Float(int intIn) {
 }
 
 
-int query(BPlusTree* stud, BPlusTree* prof ) {
+int query(BPlusTree& stu,BPlusTree& pro,HashTable& stuH,HashTable& proH) {
   int queryNum, temp1, temp2;
   char search[13], table[11], attr[7], temp3[10], temp4[10];
   int tempNum;
@@ -75,7 +75,6 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 
   fscanf(quIn, "%d\n", &queryNum);
   while(queryNum--) {
-    //printf("\n%d\n", i++);
     fscanf(quIn, "%[^,], %[^,], %[^,]", search, table, attr);
     if (search[0] == 'J') {
       if ((table[0] == 'P' && attr[0] == 'S')
@@ -86,7 +85,7 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	  printf("ERROR: queryTemp.txt is wrong\n");
 	}
 	else { // code here
-	  
+	  JoinProcessing(quOut, NESTEDBLOCKLOOPJOIN);
 	}
       }
       else {
@@ -109,13 +108,14 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 	else if (attr[1]=='c') {
 	  // 3. select * from student where score = X.XXXXX
 	  fscanf(quIn, ", %[^\n]\n", temp3);
-	  fscanf(dataIn, "%d\n", &tempNum);
-	  if (tempNum != 1) {
-	    printf("ERROR: queryTemp.txt is wrong\n");
-	  }
-	  else { // code here
+	  fscanf(dataIn, "%d\n", tempNum);
+	  int* result = new int [tempNum];
 	  
-	  }
+	  for (int i = 0; i < tempNum; i++)
+	    fscanf(dataIn, "%d\n", result[i]);
+
+	  // code here with int *result
+	  
 	}
 	else 
 	  printf("ERROR: Invalid attribute in students table\n");
@@ -193,13 +193,6 @@ int query(BPlusTree* stud, BPlusTree* prof ) {
 }
 
 int main() {
-  BPlusTree* treeStud = new BPlusTree();
-  BPlusTree* treeProf = new BPlusTree();
-  readStudent(treeStud);
-  readProf(treeProf);
-
-  query( treeStud, treeProf);
-  
   return 0;
 }
 
