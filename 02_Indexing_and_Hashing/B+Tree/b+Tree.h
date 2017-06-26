@@ -117,11 +117,7 @@ protected:
   
   Node* searchFirstMatch(int scoreLowerBound);
   Node* insert(int score, int idIn);
-<<<<<<< HEAD
   int*  search(int scoreLowerBound, int scoreUpperBound);
-
-=======
->>>>>>> be94b323e4115543a2636da81741bc3ad9afd82a
 public:
   void print(int indent);
   //  void printWithBlockNum(int indent, const HashTable& hashTable);

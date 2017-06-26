@@ -51,9 +51,6 @@
     <ClCompile Include="..\B+Tree\b+TreeSearch.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\B+Tree\b+TreeIO.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\query.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
