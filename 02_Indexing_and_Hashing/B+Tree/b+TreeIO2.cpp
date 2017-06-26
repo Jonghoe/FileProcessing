@@ -109,7 +109,7 @@ void readStudent(BPlusTree* tree) {
   
   stFP = fopen("./SampleData/student_data.csv", "r");
   if(!stFP){
-    printf("hello");
+        printf("Error: no student_data.csv found\n");
   }
   fscanf(stFP, "%d\n", &studNum);
   printf("%d\n", studNum);
@@ -136,48 +136,28 @@ void readStudent(BPlusTree* tree) {
   }
 };
 
-int float2Int(string floatIn) {
-  int scoreCal = floatIn[0] - '0';
-  int i = 1;
-  for (; floatIn[i] != '\0'; i++) {
-    if (floatIn[i] == '.')
-      continue;
-    scoreCal = (scoreCal * 10) + (floatIn[i] - '0');
+
+void readProf(BPlusTree* tree) {
+  int studNum;
+  
+  char nameTemp[21];
+  int idTemp, salaryTemp;
+  FILE *stFP;
+  
+  stFP = fopen("./SampleData/prof_data.csv", "r");
+  if(!stFP){
+    printf("Error: no prof_data.csv found\n");
   }
-  if (i == 1)
-    i = 2;
-  for (; i < 10; i++)
-    scoreCal *= 10;
-}
+  fscanf(stFP, "%d\n", &studNum);
+  printf("%d\n", studNum);
 
-char* int2Float(int intIn) {
-  char floatOut[8];
-  floatOut[0] = intIn/100000000 + '0';
-  floatOut[1] = '.';
-  floatOut[2] = intIn/10000000 + '0';
-  floatOut[3] = intIn/1000000 + '0';
-  floatOut[4] = intIn/100000 + '0';
-  floatOut[5] = intIn/10000 + '0';
-  floatOut[6] = intIn/1000 + '0';
-  floatOut[7] = '\0';
-
-  if (floatOut[6] == '0') {
-    floatOut[6] = '\0';
-    if (floatOut[5] == '0') {
-      floatOut[5] = '\0';
-      if (floatOut[4] == '0') {
-	floatOut[4] = '\0';
-	if (floatOut[3] == '0') {
-	  floatOut[3] = '\0';
-	  if (floatOut[2] == '0') {
-	    floatOut[1] = '\0';
-	  }
-	}
-      }
-    }
+  while(studNum--) {
+    fscanf(stFP, "%[^,],%d,%d\n",  nameTemp, &idTemp, &salaryTemp);
+    //printf("%s\t%d\t%d\n", nameTemp, idTemp, scoreCal);
+    tree->insert(salaryTemp, idTemp);    
   }
+};
 
-  return floatOut;
-}
+
 
 #endif

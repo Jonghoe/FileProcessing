@@ -196,8 +196,6 @@ Node* TerminalNode::insert(int score, int idIn) {
 }
 
 
-
-
 // function to help internalNode::insert()
 // insert a branch into thhe internalNode
 bool InternalNode::insertABranch(int insertIndex, Node* newVal) { // insertIndex must be > 0
