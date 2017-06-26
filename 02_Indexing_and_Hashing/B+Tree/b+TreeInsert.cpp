@@ -99,7 +99,7 @@ Node* TerminalNode::insert(int score, int idIn) {
   // exception
   if (nextTerminalNode != NULL){
     // (1) this should be in the next node
-    if ( nextTerminalNode->minVal() < score) {
+    if ( nextTerminalNode->minVal() <= score) {
       //std::cout << "go to next terminal not in right place" << std::endl;
       return nextTerminalNode->insert(score, idIn);
     }
