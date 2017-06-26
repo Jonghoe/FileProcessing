@@ -148,10 +148,10 @@ int float2Int(string floatIn) {
     i = 2;
   for (; i < 10; i++)
     scoreCal *= 10;
+  return scoreCal;
 }
 
-char* int2Float(int intIn) {
-  char floatOut[8];
+void int2Float(char* floatOut,int intIn) {
   floatOut[0] = intIn/100000000 + '0';
   floatOut[1] = '.';
   floatOut[2] = intIn/10000000 + '0';
@@ -176,8 +176,6 @@ char* int2Float(int intIn) {
       }
     }
   }
-
-  return floatOut;
 }
 
 #endif
