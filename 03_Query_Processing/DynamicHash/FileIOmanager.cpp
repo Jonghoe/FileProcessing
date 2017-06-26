@@ -43,6 +43,8 @@ vector<int> FileManager::hashload(BucketFactory::Type type)
 Bucket* FileManager::bucketSave(const ProfessorBucket& bk, ofstream& wDB)
 {	
 	wDB.seekp((bk.getBlkNum() - ProfessorBucket::initNum)*BLOCK_SIZE, ios::beg);
+	if (bk.getBlkNum() - ProfessorBucket::initNum == 129)
+		cout << "hello";
 	if (wDB.fail())
 		return nullptr;
 	int blkNum = bk.getBlkNum();
@@ -162,7 +164,7 @@ void FileManager::bucketLoad(StudentBucket** bk,int blk,ifstream &rDB)
 	char t_n[20];
 	// 원하는 위치로 이동 (블럭으로 이동)
 	
-	rDB.seekg((blk-StudentBucket::initNum)*BLOCK_SIZE,ios::beg);
+	rDB.seekg((blk-StudentBucket::initNum)*BLOCK_SIZE);
 	if (rDB.fail()){
 		*bk = nullptr;
 		return;

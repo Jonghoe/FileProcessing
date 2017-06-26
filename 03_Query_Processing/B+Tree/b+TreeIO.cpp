@@ -180,47 +180,47 @@ void BPlusTree::reCreateTree(Node* nd,vector<InternalNode*>& ins, vector<Termina
 		}
 	}
 }
-
-void indentPrint(int indent) {
-  using namespace std;
-  for (int i = 0; i < indent; i++)
-    cout << "\t";
-}
+//
+//void indentPrint(int indent) {
+//  using namespace std;
+//  for (int i = 0; i < indent; i++)
+//    cout << "\t";
+//}
 
 // these are for print test (block number values are pointer address)
-void BPlusTree::print() {rootNode->print(0);}
-void InternalNode::print(int indent) {
-  indentPrint(indent);
-  cout << "<<Internal Node>> : " << allocatedBlockNumber << endl;
-  indentPrint(indent);
-  cout << "num of records : " << storedRecordNumber << endl;
-  for (int i = 0; i < storedRecordNumber-1; i++) {
-    indentPrint(indent);
-    cout << "branchs[" << i << "] : " << branchs[i]->allocatedBlockNumber << "\t";
-    cout << "scoreDeli[" << i << "] : " << scoreDeli[i] << endl;
-  }
-  indentPrint(indent);
-  cout << "branchs[" << storedRecordNumber-1 << "] : " << branchs[storedRecordNumber-1]->allocatedBlockNumber << endl << endl;
-
-  for (int i = 0; i < storedRecordNumber; i++) {
-    indentPrint(indent);
-    cout << "branchs[" << i << "]'s child" << endl;
-    branchs[i]->print(indent+1);
-  }
-}
-void TerminalNode::print(int indent) {
-  indentPrint(indent);
-  cout << "<<Terminal Node>> : " << allocatedBlockNumber << endl;
-  indentPrint(indent);
-  cout << "num of records : " << storedRecordNumber << endl;
-  for (int i = 0; i < storedRecordNumber; i++) {
-    indentPrint(indent);
-    cout << "scores[" << i << "] : " << scores[i] << "\t";
-    cout << "studID[" << i << "] : " << studID[i] << endl;
-  }
-  cout << endl;
-  cout << "next BlockNumber: " << nextTerminalNode->allocatedBlockNumber << endl;
-}
+//void BPlusTree::print() {rootNode->print(0);
+//void InternalNode::print(int indent) {
+//  indentPrint(indent);
+//  cout << "<<Internal Node>> : " << allocatedBlockNumber << endl;
+//  indentPrint(indent);
+//  cout << "num of records : " << storedRecordNumber << endl;
+//  for (int i = 0; i < storedRecordNumber-1; i++) {
+//    indentPrint(indent);
+//    cout << "branchs[" << i << "] : " << branchs[i]->allocatedBlockNumber << "\t";
+//    cout << "scoreDeli[" << i << "] : " << scoreDeli[i] << endl;
+//  }
+//  indentPrint(indent);
+//  cout << "branchs[" << storedRecordNumber-1 << "] : " << branchs[storedRecordNumber-1]->allocatedBlockNumber << endl << endl;
+//
+//  for (int i = 0; i < storedRecordNumber; i++) {
+//    indentPrint(indent);
+//    cout << "branchs[" << i << "]'s child" << endl;
+//    branchs[i]->print(indent+1);
+//  }
+//}
+//void TerminalNode::print(int indent) {
+//  indentPrint(indent);
+//  cout << "<<Terminal Node>> : " << allocatedBlockNumber << endl;
+//  indentPrint(indent);
+//  cout << "num of records : " << storedRecordNumber << endl;
+//  for (int i = 0; i < storedRecordNumber; i++) {
+//    indentPrint(indent);
+//    cout << "scores[" << i << "] : " << scores[i] << "\t";
+//    cout << "studID[" << i << "] : " << studID[i] << endl;
+//  }
+//  cout << endl;
+//  cout << "next BlockNumber: " << nextTerminalNode->allocatedBlockNumber << endl;
+//}
 
 
 /*

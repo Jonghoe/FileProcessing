@@ -48,7 +48,7 @@ int main()
 
 	int selected = 0;
 	BPlusTree* studentTree = NULL;
-	BPlusTree* professorTree = NULL;
+	BPlusTree* professorTree = new BPlusTree();
 
 	HashTable* studentTable = NULL;
 	HashTable* professorTable = NULL;
@@ -98,6 +98,8 @@ int main()
 			//studentTree->storeTree();
 			cout << "." << endl;
 			cout << "Load complete" << endl;
+			
+//			readProf(professorTree);
 			getch();
 			break;
 		case RELEASE:
@@ -147,9 +149,12 @@ int main()
 			//studentTree->deleteTree();
 			//studentTree->loadTree();
 			cout << "Loading from Files complete";
+			fm.DBsave<StudentBucket>(*studentTable, "Students.DB");
+			fm.DBsave<ProfessorBucket>(*professorTable, "Professors.DB");
+
 			getch();
 			break;
-		case PRINTDB:			
+		case PRINTDB:
 			studentTable->printBucket();
 			professorTable->printBucket();
 			getch();

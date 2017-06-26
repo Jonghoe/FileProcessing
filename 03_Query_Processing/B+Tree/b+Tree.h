@@ -122,5 +122,5 @@ public:
   void print(int indent);
   //  void printWithBlockNum(int indent, const HashTable& hashTable);
 };
-
+void readProf(BPlusTree* tree);
 #endif

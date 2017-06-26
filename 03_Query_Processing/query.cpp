@@ -74,7 +74,7 @@ int query(BPlusTree& stu,BPlusTree& pro,HashTable& stuH,HashTable& proH) {
 	  || (table[0] == 'S' && attr[0] == 'P')) {
 	// 1. select * from student join professor
 	printf("JOIN\n");
-//	JoinProcessing(quOut, NESTEDBLOCKLOOPJOIN);
+	JoinProcessing(quOut, NESTEDBLOCKLOOPJOIN);
       }
       else {
 	printf("ERROR: Invalid table name in join\n");
@@ -167,7 +167,7 @@ int main() {
 
 void PrintJoinData(FILE* fp, const Student& stu, const Professor pro)
 {
-	fscanf(fp, "%s, %lf, %d, %d, %s, %d, %d\n", "Julius Cesare", stu.studentID, stu.score, stu.advisorID, pro.name, pro.ProfID, pro.Salary);
+	fprintf(fp, "%s, %d, %lf, %d, %s, %d, %d\n", stu.name, stu.studentID, stu.score, stu.advisorID, pro.name, pro.ProfID, pro.Salary);
 }
 void JoinProcessing(FILE* fp, flag f)
 {
@@ -179,10 +179,12 @@ if (f == NESTEDBLOCKLOOPJOIN) {
 	for (unsigned i = 0; i < AllStudent.size(); ++i) {
 		ProfessorBucket* bucket = nullptr;
 		fm.bucketLoad(&bucket, i + ProfessorBucket::initNum, ifstream("Professors.DB", ios::binary));
+		if (bucket == nullptr)
+			break;
 		ProfessorBucket& professors = *bucket;
 		StudentBucket& students = *AllStudent[i];
-		for (int s = 0; students.getSize(); ++s) {
-			for (int p = 0; professors.getSize(); ++p) {
+		for (int s = 0; s<students.getSize(); ++s) {
+			for (int p = 0; p<professors.getSize(); ++p) {
 				if (students[s].advisorID == professors[p].ProfID) {
 					PrintJoinData(fp, students[s], professors[p]);
 					break;
