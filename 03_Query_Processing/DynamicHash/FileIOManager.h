@@ -11,20 +11,16 @@ using namespace std;
 
 class FileManager {
 public:
-	bool check=false;
 	void hashsave(const HashTable& tlb);
 	vector<int> hashload(BucketFactory::Type type);
 	// 디비 저장
 	template<typename Type>
 	void DBsave( HashTable& tlb,string path)
 	{
-		check = true;
 		vector<Bucket*> buck = tlb.getBucket();
-		ofstream writeFile(path.data(), ios::binary);
 		for (auto it = buck.begin(); it != buck.end(); ++it) {
 			bucketSave(*((Type*)*it), tlb.out);
 		}
-		writeFile.close();
 	}
 
 	Bucket* bucketSave(const ProfessorBucket& bk, ofstream& wDB);
@@ -35,18 +31,16 @@ public:
 	void bucketLoad(ProfessorBucket** bk, int blk, ifstream &rDB);
 
 	template<typename Type>
-	vector<Bucket*> bucketload(string path)
+	vector<Bucket*> bucketload(HashTable& tlb)
 	{
-		float t_score;
-		char t_n[21];
 		vector<Bucket*> bks;
-		int i = 0;
+		int i = Type::initNum;
 		Type* bk = nullptr;
-		bucketLoad(&bk, i, ifstream(path, ios::binary));
+		bucketLoad(&bk, i,tlb.in);
 		if (bk != nullptr)
 			++i;
 		while (bk != nullptr) {
-			bucketLoad(&bk, i, ifstream(path, ios::binary));
+			bucketLoad(&bk, i,tlb.in);
 			if (bk != nullptr) {
 				bks.push_back(bk);
 				++i;
@@ -57,5 +51,6 @@ public:
 
 	vector<Student> readStudent(HashTable& tlb, BPlusTree& tree);
 	vector<Professor> readProfessor(HashTable& tlb, BPlusTree& tree);
+	bool check = false;
 
 };

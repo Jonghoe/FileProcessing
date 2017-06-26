@@ -1,6 +1,7 @@
  #pragma once
 #include"CommonData.h"
 #include"Bucket.h"
+#pragma pack(push,1)
 class StudentBucket :public Bucket{
 protected:
 	static int nextBlkNum;
@@ -26,3 +27,4 @@ public:
 	Student& operator[](int idx)const { return records[idx]; };
 	const static int initNum =0;
 };
+#pragma pack(pop)

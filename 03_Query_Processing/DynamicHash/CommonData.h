@@ -1,14 +1,17 @@
 #pragma once
 const int BLOCK_SIZE = 4096;
-
+#pragma pack(push,1)
 struct Student {
-	char name[20];
+	unsigned advisorID;
+	char name[20];	
 	unsigned studentID;
 	float score;
-	unsigned advisorID;
 };
+#pragma pack(pop)
+#pragma pack(push,1)
 struct Professor {
 	char name[20];
 	unsigned ProfID;
 	int Salary;
 };
+#pragma pack(pop)

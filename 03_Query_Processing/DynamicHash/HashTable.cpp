@@ -12,12 +12,12 @@
 HashTable::HashTable(BucketFactory::Type t) :type(t),table(2), MASK(1), maxLevel(1), buckets()
 {
 	if (type == BucketFactory::Type::professor) {
-		out = ofstream("Professors.DB");
-		in = ifstream("Professors.DB");
+		out = ofstream("Professors.DB",ios::binary);
+		in = ifstream("Professors.DB", ios::binary );
 	}
 	else if (type == BucketFactory::Type::student) {
-		out = ofstream("Students.DB");
-		in = ifstream("Students.DB");
+		out = ofstream("Students.DB", ios::binary );
+		in = ifstream("Students.DB", ios::binary );
 	}
 	createBucket(0);
 	createBucket(1);
@@ -29,12 +29,12 @@ HashTable::HashTable(BucketFactory::Type t) :type(t),table(2), MASK(1), maxLevel
 HashTable::HashTable(BucketFactory::Type t,const vector<int>& tb, const vector<Bucket*>& b) :type(t)
 {
 	if (type == BucketFactory::Type::professor) {
-		out = ofstream("Professors.DB");
-		in = ifstream("Professors.DB");
+		out = ofstream("Professors.DB", ios::binary);
+		in = ifstream("Professors.DB", ios::binary );
 	}
 	else if (type == BucketFactory::Type::student) {
-		out = ofstream("Students.DB");
-		in = ifstream("Students.DB");
+		out = ofstream("Students.DB", ios::binary );
+		in = ifstream("Students.DB", ios::binary );
 	}
 	table = tb;
 	maxLevel = 0;

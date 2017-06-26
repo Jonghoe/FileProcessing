@@ -14,7 +14,7 @@ void FileManager::hashsave(const HashTable& tlb)
 	}
 	ofstream writeHash(hashPath.data(), ios::binary);	
 	for (unsigned i = 0; i < tb.size(); ++i) {
-		writeHash.write((char*)(&i), 4);
+		writeHash.write((const char*)(&i), 4);
 		writeHash.write(reinterpret_cast<const char*>(&tb[i]), 4);
 	}
 	writeHash.close();
@@ -49,80 +49,52 @@ Bucket* FileManager::bucketSave(const ProfessorBucket& bk, ofstream& wDB)
 	int size = bk.getSize();
 	int level = bk.getLevel();
 
-	wDB.write((char*)(&blkNum), 4);
-	wDB.write((char*)(&size), 4);
-	wDB.write((char*)(&level), 4);
+	wDB.write((const char*)(&blkNum), 4);
+	wDB.write((const char*)(&size), 4);
+	wDB.write((const char*)(&level), 4);
 	for (int j = 0; j<bk.getSize(); ++j) {
 		int aid = bk[j].ProfID;
 		int salary= bk[j].Salary;
-		wDB.write((char*)(&aid), 4);
+		wDB.write((const char*)(&aid), 4);
 		wDB.write(bk[j].name, 20);
-		wDB.write((char*)(&salary), 4);
+		wDB.write((const char*)(&salary), 4);
 	}
 	// 블럭의 크기 만큼 데이터 빈공간 채우기.
 	int buffer[6] = { 0,0,0,0,0,0 };
 	for (int j = 0; j < bk.getCapacity() - bk.getSize(); ++j) {
-		wDB.write((char*)(buffer), 4);
-		wDB.write((char*)(buffer), 20);
-		wDB.write((char*)(buffer), 4);
+		wDB.write((const char*)(buffer), 4);
+		wDB.write((const char*)(buffer), 20);
+		wDB.write((const char*)(buffer), 4);
 	}
-	wDB.write((char*)(buffer), 24);
+	wDB.write((const char*)(buffer), 24);
 }
 
 Bucket* FileManager::bucketSave(const StudentBucket& bk,ofstream& wDB)
 {
 	// 원하는 위치로 이동 (블럭으로 이동)	
-	wDB.seekp((bk.getBlkNum()-StudentBucket::initNum)*BLOCK_SIZE);
+	wDB.seekp((bk.getBlkNum()-StudentBucket::initNum)*BLOCK_SIZE,ios::beg);
 	if (wDB.fail() != 0){
 		return nullptr;
 	}
+	int beg, end;
 	int blkNum = bk.getBlkNum();
 	int size = bk.getSize();
 	int level = bk.getLevel();
-	if (check)
-		cout << wDB.tellp() << endl;
-
-	wDB.write((char*)(&blkNum), 4);
-	wDB.write((char*)(&size), 4);
-	wDB.write((char*)(&level), 4);
+	wDB.write((const char*)(&blkNum), 4);
+	wDB.write((const char*)(&size), 4);
+	wDB.write((const char*)(&level), 4);
 	for (int j = 0; j<bk.getSize(); ++j) {
-		if (check&&j == 69 || j == 99)
-			cout << "hello";
-		int aid = bk[j].advisorID;
-		float score = bk[j].score;
-		int sid = bk[j].studentID;
-		wDB.write((char*)(&aid), 4);
-		if (check)
-			cout << wDB.tellp() << endl;
+		wDB.write((const char*)(&bk[j].advisorID),  4);
 		wDB.write(bk[j].name, 20);
-		if (check)
-			cout << wDB.tellp() << endl;
-		wDB.write((char*)(&sid), 4);
-		if (check)
-			cout << wDB.tellp() << endl;
-		int beg = wDB.tellp();
-		wDB.write((char*)(&score), 4);
-		int end = wDB.tellp();
-		if (end - beg > 4) {			
-			wDB.seekp(4 + beg - end, ios::cur);
-		}
-		if (check)
-			cout << wDB.tellp() << endl;
+		wDB.write((const char*)(&bk[j].studentID), 4);
+		wDB.write((const char*)(&bk[j].score), 4);
 	}
 	// 블럭의 크기 만큼 데이터 빈공간 채우기.
-	int buffer[6] = { 0,0,0,0,0 ,0 };
+	int buffer[8] = { 0,0,0,0,0 ,0,0,0};
 	for (int j = 0; j < bk.getCapacity() - bk.getSize(); ++j) {
-		wDB.write((char*)(buffer), 4);
-		wDB.write((char*)(buffer), 20);
-		wDB.write((char*)(buffer), 4);
-		wDB.write((char*)(buffer), 4);
-		if (check)
-			cout << wDB.tellp() << endl;
-
+		wDB.write((const char*)(buffer), 32);
 	}
-	wDB.write((char*)(buffer), 20);
-	if (check)
-		cout << wDB.tellp() << endl;
+	wDB.write((const char*)(buffer), 20);
 
 }
 vector<StudentBucket*> FileManager::bucketLoadAll(StudentBucket* bk,ifstream& rDB)
@@ -130,10 +102,12 @@ vector<StudentBucket*> FileManager::bucketLoadAll(StudentBucket* bk,ifstream& rD
 	vector<StudentBucket*> buckets;
 	StudentBucket* bucket=nullptr;
 	int i = StudentBucket::initNum;
+	check = true;
 	do {
 		bucketLoad(&bucket, i++, rDB);
 		buckets.push_back(bucket);
 	}while (bucket != nullptr);
+	check = false;
 	return buckets;
 }
 vector<ProfessorBucket*> FileManager::bucketLoadAll(ProfessorBucket* bk,ifstream & rDB)
@@ -154,7 +128,7 @@ void FileManager::bucketLoad(ProfessorBucket** bk, int blk, ifstream &rDB)
 	int t_aid, salary, level, size, blkNum;
 	char t_n[20];
 	// 원하는 위치로 이동 (블럭으로 이동)
-	rDB.seekg((blk-ProfessorBucket::initNum)*BLOCK_SIZE);
+	rDB.seekg((blk-ProfessorBucket::initNum)*BLOCK_SIZE,ios::beg);
 	if (rDB.fail()){
 		*bk = nullptr;
 		return;
@@ -187,7 +161,8 @@ void FileManager::bucketLoad(StudentBucket** bk,int blk,ifstream &rDB)
 	float t_score;
 	char t_n[20];
 	// 원하는 위치로 이동 (블럭으로 이동)
-	rDB.seekg(blk*BLOCK_SIZE);
+	
+	rDB.seekg((blk-StudentBucket::initNum)*BLOCK_SIZE,ios::beg);
 	if (rDB.fail()){
 		*bk = nullptr;
 		return;
@@ -199,7 +174,6 @@ void FileManager::bucketLoad(StudentBucket** bk,int blk,ifstream &rDB)
 		*bk = nullptr;
 		return;
 	}
-	//assert(blk == blkNum);
 	for(int i=0;i<size;++i){
 		rDB.read((char*)(&t_aid), 4);
 		rDB.read(t_n, 20);

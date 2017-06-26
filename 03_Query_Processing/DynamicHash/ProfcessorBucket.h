@@ -1,6 +1,7 @@
 #pragma once
 #include"Bucket.h"
 #include"CommonData.h"
+#pragma pack(push,1)
 class ProfessorBucket :public Bucket{
 	static int nextBlkNum;
 protected:
@@ -27,3 +28,4 @@ public:
 	const static int initNum=10000000;
 	static void resetNextBlkNum() { nextBlkNum = initNum; }
 };
+#pragma pack(pop)
